@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Stock } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 import { StockRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.repository.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class StockRepository extends StockRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, stock: Stock): Promise<ApiResponse> {
+  async add(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -22,10 +22,12 @@ export class StockRepository extends StockRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Stock agregado existosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Stock agregada exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -34,7 +36,7 @@ export class StockRepository extends StockRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, stock: Stock): Promise<ApiResponse> {
+  async edit(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -44,13 +46,12 @@ export class StockRepository extends StockRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o stock no encontrada',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Stock editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Stock editado exitosamente.' : 'Usuario o stock no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -59,7 +60,10 @@ export class StockRepository extends StockRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, stockID: string): Promise<ApiResponse> {
+  async remove(
+    identifier: string,
+    stockID: string,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -69,10 +73,12 @@ export class StockRepository extends StockRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Stock removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Stock removido exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',

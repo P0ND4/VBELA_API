@@ -1,4 +1,4 @@
-import { PrimitiveUser } from '../user.entity';
+import { PrimitiveUser } from '../../user.entity';
 
 export interface ValidateDto {
   identifier: string;

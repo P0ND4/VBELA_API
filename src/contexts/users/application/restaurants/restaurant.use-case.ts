@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse } from 'src/contexts/shared/api.response';
 import { RestaurantRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/restaurant.repository.entity';
 import { Location } from '../../domain/types';
 
@@ -7,15 +7,15 @@ import { Location } from '../../domain/types';
 export class RestaurantUseCase {
   constructor(private readonly restaurantRepository: RestaurantRepositoryEntity) {}
 
-  async add(identifier: string, restaurant: Location): Promise<ApiResponse> {
+  async add(identifier: string, restaurant: Location): Promise<ApiResponse<null>> {
     return await this.restaurantRepository.add(identifier, restaurant);
   }
 
-  async edit(identifier: string, restaurant: Location): Promise<ApiResponse> {
+  async edit(identifier: string, restaurant: Location): Promise<ApiResponse<null>> {
     return await this.restaurantRepository.edit(identifier, restaurant);
   }
 
-  async remove(identifier: string, restaurantID: string): Promise<ApiResponse> {
+  async remove(identifier: string, restaurantID: string): Promise<ApiResponse<null>> {
     return await this.restaurantRepository.remove(identifier, restaurantID);
   }
 }

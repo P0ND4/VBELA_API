@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SchemaModule } from '../../../schema/shema.module';
+import { SchemaModule } from '../../../schema/user/shema.module';
 import { MenuController } from './controllers/menu.controller';
 import { OrderController } from './controllers/order.controller';
 import { RestaurantController } from './controllers/restaurant.controller';

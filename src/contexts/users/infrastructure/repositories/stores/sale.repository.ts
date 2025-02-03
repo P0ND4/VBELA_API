@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Order } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class SaleRepository extends SaleRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, sale: Order): Promise<ApiResponse> {
+  async add(identifier: string, sale: Order): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -22,10 +22,12 @@ export class SaleRepository extends SaleRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Venta agregado existosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Venta agregada exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -34,7 +36,7 @@ export class SaleRepository extends SaleRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, sale: Order): Promise<ApiResponse> {
+  async edit(identifier: string, sale: Order): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -44,13 +46,12 @@ export class SaleRepository extends SaleRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o venta no encontrada',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Venta editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Venta editada exitosamente.' : 'Usuario o venta no encontrada.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -59,7 +60,7 @@ export class SaleRepository extends SaleRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, saleID: string): Promise<ApiResponse> {
+  async remove(identifier: string, saleID: string): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -69,10 +70,12 @@ export class SaleRepository extends SaleRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Venta removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Venta removida exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',

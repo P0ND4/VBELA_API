@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import {
   AuthRepositoryEntity,
   ValidateDto,
-} from '../../domain/repositories/auth.repository.entity';
-import { PrimitiveUser, UserEntity } from '../../domain/user.entity';
-import { User } from '../schema/user.schema';
+} from '../../../domain/repositories/auth/auth.repository.entity';
+import { PrimitiveUser, UserEntity } from '../../../domain/user.entity';
+import { User } from '../../schema/user/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 

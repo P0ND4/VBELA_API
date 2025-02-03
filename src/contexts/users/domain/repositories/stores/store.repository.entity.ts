@@ -1,8 +1,8 @@
-import { ApiResponse } from '../../api.response';
+import { ApiResponse } from '../../../../shared/api.response';
 import { Location } from '../../types';
 
 export abstract class StoreRepositoryEntity {
-  abstract add(identifier: string, store: Location): Promise<ApiResponse>;
-  abstract edit(identifier: string, store: Location): Promise<ApiResponse>;
-  abstract remove(identifier: string, storeID: string): Promise<ApiResponse>;
+  abstract add(identifier: string, store: Location): Promise<ApiResponse<null>>;
+  abstract edit(identifier: string, store: Location): Promise<ApiResponse<null>>;
+  abstract remove(identifier: string, storeID: string): Promise<ApiResponse<null>>;
 }

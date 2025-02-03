@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import { Document, HydratedDocument } from 'mongoose';
 import {
   Element,
   Inventory,
@@ -19,7 +19,7 @@ const DEFAULT_NAME = 'VBELA';
 const DEFAULT_COIN = 'USD';
 
 @Schema()
-export class User {
+export class User extends Document {
   @Prop({ required: true, unique: true })
   identifier: string;
 

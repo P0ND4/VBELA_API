@@ -19,7 +19,7 @@ import {
   InvoiceInformationHttpDto,
   PaymentMethodsHttpDto,
 } from '../dto/setting.http-dto';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse } from 'src/contexts/shared/api.response';
 
 @Controller(`${V1_USER}/setting`)
 @UseGuards(JwtAuthGuard)
@@ -30,7 +30,7 @@ export class SettingController {
   async darkMode(
     @Request() req,
     @Body() darkModeHttpDto: DarkModeHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.darkMode(
       req.user.identifier,
       darkModeHttpDto.darkMode,
@@ -41,7 +41,7 @@ export class SettingController {
   async coin(
     @Request() req,
     @Body() coinHttpDto: CoinHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.coin(req.user.identifier, coinHttpDto.coin);
   }
 
@@ -49,7 +49,7 @@ export class SettingController {
   async color(
     @Request() req,
     @Body() colorHttpDto: ColorHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.color(req.user.identifier, colorHttpDto.color);
   }
 
@@ -57,7 +57,7 @@ export class SettingController {
   async invoiceInformation(
     @Request() req,
     @Body() invoiceInformationHttpDto: InvoiceInformationHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.invoiceInformation(
       req.user.identifier,
       invoiceInformationHttpDto,
@@ -68,7 +68,7 @@ export class SettingController {
   async addPaymentMethods(
     @Request() req,
     @Body() paymentMethodsHttpDto: PaymentMethodsHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.addPaymentMethods(
       req.user.identifier,
       paymentMethodsHttpDto,
@@ -79,18 +79,18 @@ export class SettingController {
   async editPaymentMethods(
     @Request() req,
     @Body() paymentMethodsHttpDto: PaymentMethodsHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.editPaymentMethods(
       req.user.identifier,
       paymentMethodsHttpDto,
     );
   }
 
-  @Delete('payment-methods:id')
+  @Delete('payment-methods/:id')
   async removePaymentMethods(
     @Param('id') id: string,
     @Request() req,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.settingUseCase.removePaymentMethods(req.user.identifier, id);
   }
 }

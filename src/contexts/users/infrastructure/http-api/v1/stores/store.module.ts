@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { SchemaModule } from '../../../schema/shema.module';
+import { SchemaModule } from '../../../schema/user/shema.module';
 import { ProductController } from './controllers/product.controller';
 import { SaleController } from './controllers/sale.controller';
 import { StoreController } from './controllers/store.controller';

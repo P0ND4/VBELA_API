@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Recipe } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 import { RecipeRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/recipe.repository.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class RecipeRepository extends RecipeRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, recipe: Recipe): Promise<ApiResponse> {
+  async add(identifier: string, recipe: Recipe): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -22,10 +22,12 @@ export class RecipeRepository extends RecipeRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Receta agregado existosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Receta agregada exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -34,7 +36,7 @@ export class RecipeRepository extends RecipeRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, recipe: Recipe): Promise<ApiResponse> {
+  async edit(identifier: string, recipe: Recipe): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -44,13 +46,14 @@ export class RecipeRepository extends RecipeRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o receta no encontrada',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Receta editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Receta editada exitosamente.'
+          : 'Usuario o receta no encontrada.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -59,7 +62,7 @@ export class RecipeRepository extends RecipeRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, recipeID: string): Promise<ApiResponse> {
+  async remove(identifier: string, recipeID: string): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -69,10 +72,12 @@ export class RecipeRepository extends RecipeRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Receta removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Receta removida exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -81,3 +86,4 @@ export class RecipeRepository extends RecipeRepositoryEntity {
     }
   }
 }
+

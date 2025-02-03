@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Element } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 import { MenuRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/menu.repository.entity';
 
 @Injectable()
@@ -12,16 +12,18 @@ export class MenuRepository extends MenuRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, menu: Element): Promise<ApiResponse> {
+  async add(identifier: string, menu: Element): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate({ identifier }, { $push: { menu } }, { new: true })
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Menu agregado existosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Menú agregado exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -30,7 +32,7 @@ export class MenuRepository extends MenuRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, menu: Element): Promise<ApiResponse> {
+  async edit(identifier: string, menu: Element): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -40,13 +42,12 @@ export class MenuRepository extends MenuRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o menu no encontrada',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Menu editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Menú editado exitosamente.' : 'Usuario o menú no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -55,7 +56,7 @@ export class MenuRepository extends MenuRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, menuID: string): Promise<ApiResponse> {
+  async remove(identifier: string, menuID: string): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -65,10 +66,12 @@ export class MenuRepository extends MenuRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Menu removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Menú removido exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',

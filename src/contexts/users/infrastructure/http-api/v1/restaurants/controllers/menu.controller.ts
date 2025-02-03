@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse } from 'src/contexts/shared/api.response';
 import { ElementHttpDto } from '../../common-dto/element.http-dto';
 import { MenuUseCase } from 'src/contexts/users/application/restaurants/menu.use-case';
 
@@ -23,7 +23,7 @@ export class MenuController {
   async add(
     @Req() req,
     @Body() menuHttpDto: ElementHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.menuUseCase.add(req.user.identifier, menuHttpDto);
   }
 
@@ -31,12 +31,12 @@ export class MenuController {
   async edit(
     @Req() req,
     @Body() menuHttpDto: ElementHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.menuUseCase.edit(req.user.identifier, menuHttpDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse> {
+  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
     return this.menuUseCase.remove(req.user.identifier, id);
   }
 }

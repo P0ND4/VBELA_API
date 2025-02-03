@@ -27,7 +27,7 @@ export interface PrimitiveUser {
   recipes: Recipe[];
   stores: Location[];
   restaurants: Location[];
-  productsAndServices: Element[];
+  products: Element[];
   sales: Order[];
   kitchens: Kitchen[];
   menu: Element[];
@@ -62,7 +62,7 @@ export class UserEntity {
       recipes: createUser.recipes || [],
       stores: createUser.stores || [],
       restaurants: createUser.restaurants || [],
-      productsAndServices: createUser.productsAndServices || [],
+      products: createUser.products || [],
       sales: createUser.sales || [],
       kitchens: createUser.kitchens || [],
       menu: createUser.menu || [],

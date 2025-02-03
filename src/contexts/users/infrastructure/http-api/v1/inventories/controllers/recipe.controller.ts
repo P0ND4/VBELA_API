@@ -11,7 +11,7 @@ import {
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { RecipeHttpDto } from '../dto/recipe.http-dto';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse } from 'src/contexts/shared/api.response';
 import { RecipeUseCase } from 'src/contexts/users/application/inventories/recipe.use-case';
 
 @Controller(`${V1_USER}/recipe`)
@@ -23,7 +23,7 @@ export class RecipeController {
   async add(
     @Req() req,
     @Body() recipeHttpDto: RecipeHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.recipeUseCase.add(req.user.identifier, recipeHttpDto);
   }
 
@@ -31,12 +31,12 @@ export class RecipeController {
   async edit(
     @Req() req,
     @Body() recipeHttpDto: RecipeHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.recipeUseCase.edit(req.user.identifier, recipeHttpDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse> {
+  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
     return this.recipeUseCase.remove(req.user.identifier, id);
   }
 }

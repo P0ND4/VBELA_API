@@ -1,10 +1,10 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { KitchenRepositoryEntity } from '../../../domain/repositories/kitchens/kitchen.repository.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Kitchen } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 
 @Injectable()
 export class KitchenRepository extends KitchenRepositoryEntity {
@@ -12,7 +12,7 @@ export class KitchenRepository extends KitchenRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, kitchen: Kitchen): Promise<ApiResponse> {
+  async add(identifier: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -22,10 +22,12 @@ export class KitchenRepository extends KitchenRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Cocina agregada existosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Cocina agregada exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -34,7 +36,7 @@ export class KitchenRepository extends KitchenRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, kitchen: Kitchen): Promise<ApiResponse> {
+  async edit(identifier: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -44,13 +46,14 @@ export class KitchenRepository extends KitchenRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o cocina no encontrada',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Cocina editada exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Cocina editada exitosamente.'
+          : 'Usuario o cocina no encontrada.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -59,7 +62,10 @@ export class KitchenRepository extends KitchenRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, kitchenID: string): Promise<ApiResponse> {
+  async remove(
+    identifier: string,
+    kitchenID: string,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -69,10 +75,12 @@ export class KitchenRepository extends KitchenRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Cocina removida exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Cocina removida exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',

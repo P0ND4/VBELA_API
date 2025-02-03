@@ -3,7 +3,7 @@ import { UserController } from './controllers/user.controller';
 import { UserRepositoryEntity } from 'src/contexts/users/domain/repositories/user/user.repository.entity';
 import { UserRepository } from '../../../repositories/user/user.repository';
 import { UserUseCase } from 'src/contexts/users/application/user/user.use-case';
-import { SchemaModule } from '../../../schema/shema.module';
+import { SchemaModule } from '../../../schema/user/shema.module';
 import { SettingRepository } from '../../../repositories/user/setting.repository';
 import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-case';
 import { SettingRepositoryEntity } from 'src/contexts/users/domain/repositories/user/setting.repository.entity';

@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Inventory } from '../../../domain/types';
-import { ApiResponse } from '../../../domain/api.response';
+import { ApiResponse, Status } from '../../../../shared/api.response';
 import { InventoryRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/inventory.repository.entity';
 
 @Injectable()
@@ -12,7 +12,10 @@ export class InventoryRepository extends InventoryRepositoryEntity {
     super();
   }
 
-  async add(identifier: string, inventory: Inventory): Promise<ApiResponse> {
+  async add(
+    identifier: string,
+    inventory: Inventory,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -22,12 +25,11 @@ export class InventoryRepository extends InventoryRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
       return new ApiResponse(
-        HttpStatus.OK,
-        'Inventario agregado existosamente',
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Inventario creado exitosamente.' : 'Usuario no encontrado.',
+        null,
       );
     } catch (error) {
       throw new HttpException(
@@ -37,7 +39,10 @@ export class InventoryRepository extends InventoryRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, inventory: Inventory): Promise<ApiResponse> {
+  async edit(
+    identifier: string,
+    inventory: Inventory,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -47,13 +52,14 @@ export class InventoryRepository extends InventoryRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o inventario no encontrado',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Inventario editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Inventario actualizado exitosamente.'
+          : 'Usuario o inventario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -62,7 +68,10 @@ export class InventoryRepository extends InventoryRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, inventoryID: string): Promise<ApiResponse> {
+  async remove(
+    identifier: string,
+    inventoryID: string,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -72,10 +81,12 @@ export class InventoryRepository extends InventoryRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Inventario removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Inventario eliminado exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',

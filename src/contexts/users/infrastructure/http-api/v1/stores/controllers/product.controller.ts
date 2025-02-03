@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse } from 'src/contexts/shared/api.response';
 import { ElementHttpDto } from '../../common-dto/element.http-dto';
 import { ProductUseCase } from 'src/contexts/users/application/stores/product.use-case';
 
@@ -23,7 +23,7 @@ export class ProductController {
   async add(
     @Req() req,
     @Body() productHttpDto: ElementHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.productUseCase.add(req.user.identifier, productHttpDto);
   }
 
@@ -31,12 +31,12 @@ export class ProductController {
   async edit(
     @Req() req,
     @Body() productHttpDto: ElementHttpDto,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     return this.productUseCase.edit(req.user.identifier, productHttpDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse> {
+  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
     return this.productUseCase.remove(req.user.identifier, id);
   }
 }

@@ -1,9 +1,9 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { User } from '../../schema/user.schema';
+import { User } from '../../schema/user/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { SettingRepositoryEntity } from 'src/contexts/users/domain/repositories/user/setting.repository.entity';
-import { ApiResponse } from 'src/contexts/users/domain/api.response';
+import { ApiResponse, Status } from 'src/contexts/shared/api.response';
 import {
   InvoiceInformation,
   PaymentMethods,
@@ -15,18 +15,20 @@ export class SettingRepository extends SettingRepositoryEntity {
     super();
   }
 
-  async darkMode(identifier: string, darkMode: boolean): Promise<ApiResponse> {
+  async darkMode(
+    identifier: string,
+    darkMode: boolean,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate({ identifier }, { darkMode }, { new: true })
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
       return new ApiResponse(
-        HttpStatus.OK,
-        'Modo oscuro actualizado exitosamente',
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Modo oscuro actualizado exitosamente' : 'Usuario no encontrado',
+        null,
       );
     } catch (error) {
       throw new HttpException(
@@ -39,18 +41,19 @@ export class SettingRepository extends SettingRepositoryEntity {
   async invoiceInformation(
     identifier: string,
     invoiceInformation: InvoiceInformation,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate({ identifier }, { invoiceInformation }, { new: true })
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
       return new ApiResponse(
-        HttpStatus.OK,
-        'Información de la factura actualizado exitosamente',
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Información de la factura actualizada exitosamente'
+          : 'Usuario no encontrado',
+        null,
       );
     } catch (error) {
       throw new HttpException(
@@ -60,16 +63,18 @@ export class SettingRepository extends SettingRepositoryEntity {
     }
   }
 
-  async coin(identifier: string, coin: string): Promise<ApiResponse> {
+  async coin(identifier: string, coin: string): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate({ identifier }, { coin }, { new: true })
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Moneda actualizado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Moneda actualizada exitosamente' : 'Usuario no encontrado',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -78,16 +83,18 @@ export class SettingRepository extends SettingRepositoryEntity {
     }
   }
 
-  async color(identifier: string, color: number): Promise<ApiResponse> {
+  async color(identifier: string, color: number): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate({ identifier }, { color }, { new: true })
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Color actualizado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Color actualizado exitosamente' : 'Usuario no encontrado',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -99,7 +106,7 @@ export class SettingRepository extends SettingRepositoryEntity {
   async addPaymentMethods(
     identifier: string,
     paymentMethods: PaymentMethods,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -109,12 +116,13 @@ export class SettingRepository extends SettingRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
       return new ApiResponse(
-        HttpStatus.OK,
-        'Métodos de pago actualizado exitosamente',
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user
+          ? 'Métodos de pago actualizados exitosamente'
+          : 'Usuario no encontrado',
+        null,
       );
     } catch (error) {
       throw new HttpException(
@@ -127,7 +135,7 @@ export class SettingRepository extends SettingRepositoryEntity {
   async editPaymentMethods(
     identifier: string,
     paymentMethods: PaymentMethods,
-  ): Promise<ApiResponse> {
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -137,13 +145,14 @@ export class SettingRepository extends SettingRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException(
-          'Usuario o método de pago no encontrado',
-          HttpStatus.NOT_FOUND,
-        );
-
-      return new ApiResponse(HttpStatus.OK, 'Método de pago editado exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Método de pago editado exitosamente'
+          : 'Usuario o método de pago no encontrado',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
@@ -152,7 +161,10 @@ export class SettingRepository extends SettingRepositoryEntity {
     }
   }
 
-  async removePaymentMethods(identifier: string, paymentMethodsID: string): Promise<ApiResponse> {
+  async removePaymentMethods(
+    identifier: string,
+    paymentMethodsID: string,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -162,10 +174,12 @@ export class SettingRepository extends SettingRepositoryEntity {
         )
         .exec();
 
-      if (!user)
-        throw new HttpException('Usuario no encontrado', HttpStatus.NOT_FOUND);
-
-      return new ApiResponse(HttpStatus.OK, 'Método de pago removido exitosamente');
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Método de pago removido exitosamente' : 'Usuario no encontrado',
+        null,
+      );
     } catch (error) {
       throw new HttpException(
         error.message || 'Error interno del servidor',
