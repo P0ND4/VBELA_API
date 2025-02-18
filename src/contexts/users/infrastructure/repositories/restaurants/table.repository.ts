@@ -36,6 +36,30 @@ export class TableRepository extends TableRepositoryEntity {
     }
   }
 
+  async addMultiple(identifier: string, tables: Table[]): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate(
+          { identifier },
+          { $push: { tables: { $each: tables } } },
+          { new: true },
+        )
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Mesas agregadas exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async edit(identifier: string, table: Table): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel

@@ -23,10 +23,17 @@ import { Redis } from 'ioredis';
         });
       },
     },
+    {
+      provide: 'REDIS_BLACKLIST_TOKEN',
+      useFactory: () => {
+        return new Redis({
+          host: 'localhost',
+          port: 6379,
+          db: 2,
+        });
+      },
+    },
   ],
-  exports: [
-    'REDIS_THROTTLER',
-    'REDIS_VERIFICATION',
-  ],
+  exports: ['REDIS_THROTTLER', 'REDIS_VERIFICATION', 'REDIS_BLACKLIST_TOKEN'],
 })
 export class RedisModule {}

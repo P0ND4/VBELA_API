@@ -35,15 +35,12 @@ export class ElementHttpDto {
   subcategory?: string[];
 
   @IsString()
-  @IsNotEmpty()
   description?: string;
 
   @IsString()
-  @IsNotEmpty()
   code?: string;
 
   @IsString()
-  @IsNotEmpty()
   unit?: string;
 
   @IsBoolean()

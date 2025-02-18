@@ -10,7 +10,7 @@ import {
 } from '@nestjs/common';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
-import { KitchenHttpDto } from '../dto/kitchen.http-dto';
+import { Kitchen, KitchenHttpDto } from '../dto/kitchen.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { KitchenUseCase } from 'src/contexts/users/application/kitchens/kitchen.use-case';
 
@@ -30,13 +30,16 @@ export class KitchenController {
   @Put('')
   async edit(
     @Req() req,
-    @Body() kitchenHttpDto: KitchenHttpDto,
+    @Body() kitchenHttpDto: Kitchen,
   ): Promise<ApiResponse<null>> {
     return this.kitchenUseCase.edit(req.user.identifier, kitchenHttpDto);
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
+  async remove(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<ApiResponse<null>> {
     return this.kitchenUseCase.remove(req.user.identifier, id);
   }
 }

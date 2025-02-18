@@ -16,6 +16,7 @@ import { MenuRepositoryEntity } from 'src/contexts/users/domain/repositories/res
 import { OrderRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/order.repository.entity';
 import { RestaurantRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/restaurant.repository.entity';
 import { TableRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/table.repository.entity';
+import { OrderEvents } from '../../../repositories/common/order.events';
 
 @Module({
   imports: [SchemaModule],
@@ -26,6 +27,7 @@ import { TableRepositoryEntity } from 'src/contexts/users/domain/repositories/re
     TableController,
   ],
   providers: [
+    OrderEvents,
     MenuRepository,
     OrderRepository,
     RestaurantRepository,

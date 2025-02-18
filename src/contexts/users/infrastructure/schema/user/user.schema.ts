@@ -12,6 +12,7 @@ import {
   Stock,
   Table,
 } from 'src/contexts/users/domain/types';
+import { Handler } from 'src/contexts/users/domain/types/handlers';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -54,6 +55,9 @@ export class User extends Document {
 
   @Prop({ type: [Object], default: [] })
   paymentMethods: PaymentMethods[];
+
+  @Prop({ type: [Object], default: [] })
+  handlers: Handler[];
 
   @Prop({ type: [Object], default: [] })
   stocks: Stock[];

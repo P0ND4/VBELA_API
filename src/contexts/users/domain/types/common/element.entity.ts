@@ -1,3 +1,8 @@
+export interface Discount {
+  id: string;
+  quantity: number;
+}
+
 export interface Element {
   id: string;
   locationID: string;

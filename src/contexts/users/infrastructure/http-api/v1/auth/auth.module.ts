@@ -22,6 +22,7 @@ import { CheckUseCase } from 'src/contexts/users/application/auth/check.use-case
 import { CheckRepositoryEntity } from 'src/contexts/users/domain/repositories/auth/check.repository.entity';
 import { CheckController } from './controllers/check.controller';
 import { TwilioService } from 'src/contexts/shared/twilio/twilio.service';
+import { TokenBlacklistService } from './services/token-blacklist.service';
 
 @Module({
   imports: [
@@ -37,6 +38,8 @@ import { TwilioService } from 'src/contexts/shared/twilio/twilio.service';
   ],
   controllers: [AuthController, VerifyController, CheckController],
   providers: [
+    TokenBlacklistService,
+
     AuthRepository,
     AuthUseCase,
 

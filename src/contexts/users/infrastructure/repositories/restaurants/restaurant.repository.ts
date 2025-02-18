@@ -76,7 +76,13 @@ export class RestaurantRepository extends RestaurantRepositoryEntity {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $pull: { restaurants: { id: restaurantID } } },
+          {
+            $pull: {
+              restaurants: { id: restaurantID },
+              menu: { locationID: restaurantID },
+              tables: { restaurantID },
+            },
+          },
           { new: true },
         )
         .exec();

@@ -27,6 +27,14 @@ export class TableController {
     return this.tableUseCase.add(req.user.identifier, tableHttpDto);
   }
 
+  @Post('multiple')
+  async addMultiple(
+    @Req() req,
+    @Body() tablesHttpDto: TableHttpDto[],
+  ): Promise<ApiResponse<null>> {
+    return this.tableUseCase.addMultiple(req.user.identifier, tablesHttpDto);
+  }
+
   @Put('')
   async edit(
     @Req() req,

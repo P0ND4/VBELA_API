@@ -65,7 +65,9 @@ export class StoreRepository extends StoreRepositoryEntity {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $pull: { stores: { id: storeID } } },
+          {
+            $pull: { stores: { id: storeID }, products: { locationID: storeID } },
+          },
           { new: true },
         )
         .exec();
@@ -73,7 +75,7 @@ export class StoreRepository extends StoreRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Tienda removida exitosamente.' : 'Usuario no encontrado.',
+        user ? 'Tienda y productos removidos exitosamente.' : 'Usuario no encontrado.',
         null,
       );
     } catch (error) {

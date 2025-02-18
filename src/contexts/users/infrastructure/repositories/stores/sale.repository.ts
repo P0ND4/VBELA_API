@@ -1,26 +1,45 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schema/user/user.schema';
-import { Model } from 'mongoose';
-import { Order } from '../../../domain/types';
+import { ClientSession, Model } from 'mongoose';
 import { ApiResponse, Status } from '../../../../shared/api.response';
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
+import { OrderDTO } from 'src/contexts/users/domain/types';
+import { OrderEvents } from '../common/order.events';
 
 @Injectable()
 export class SaleRepository extends SaleRepositoryEntity {
-  constructor(@InjectModel(User.name) public userModel: Model<User>) {
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+    private readonly orderEvents: OrderEvents,
+  ) {
     super();
   }
 
-  async add(identifier: string, sale: Order): Promise<ApiResponse<null>> {
+  async add(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $push: { sales: sale } },
+          { $push: { sales: dto.order } },
           { new: true },
         )
         .exec();
+
+      if (user) {
+        if (!!dto.discounts.length) {
+          const discountUpdates = dto.discounts.map((discount) => ({
+            updateOne: {
+              filter: { 'products.id': discount.id },
+              update: { $inc: { 'products.$.stock': -discount.quantity } },
+            },
+          }));
+
+          await this.userModel.bulkWrite(discountUpdates);
+        }
+
+        await this.orderEvents.events(dto);
+      }
 
       return new ApiResponse(
         user ? Status.Success : Status.Error,
@@ -36,15 +55,17 @@ export class SaleRepository extends SaleRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, sale: Order): Promise<ApiResponse<null>> {
+  async edit(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'sales.id': sale.id },
-          { $set: { 'sales.$': sale } },
+          { identifier, 'sales.id': dto.order.id },
+          { $set: { 'sales.$': dto.order } },
           { new: true },
         )
         .exec();
+
+      if (user) await this.orderEvents.events(dto);
 
       return new ApiResponse(
         user ? Status.Success : Status.Error,

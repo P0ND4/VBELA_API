@@ -36,7 +36,10 @@ export class SaleController {
   }
 
   @Delete(':id')
-  async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
+  async remove(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<ApiResponse<null>> {
     return this.saleUseCase.remove(req.user.identifier, id);
   }
 }

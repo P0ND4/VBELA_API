@@ -24,4 +24,17 @@ export class UserRepository extends UserRepositoryEntity {
       user ? UserEntity.transform(user).toPrimitives() : null,
     );
   }
+
+  async findAndDeleteUserByIdentifier(
+    identifier: string,
+  ): Promise<ApiResponse<PrimitiveUser | null>> {
+    const user = await this.userModel.findOneAndDelete({ identifier }).exec();
+    
+    return new ApiResponse(
+      user ? Status.Success : Status.Error,
+      user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+      user ? 'Usuario eliminado' : 'Usuario no encontrado',
+      user ? UserEntity.transform(user).toPrimitives() : null,
+    );
+  }
 }

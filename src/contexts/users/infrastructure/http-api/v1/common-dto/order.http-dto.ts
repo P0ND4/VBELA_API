@@ -1,13 +1,74 @@
+import { Type } from 'class-transformer';
 import {
   ArrayNotEmpty,
   IsArray,
   IsNotEmpty,
   IsNumber,
   IsString,
+  IsOptional,
+  IsBoolean,
+  ValidateNested,
+  IsObject,
+  IsDefined,
 } from 'class-validator';
-import { Selection, PaymentMethod } from 'src/contexts/users/domain/types';
+import { Movement } from '../inventories/dto/stock.http-dto';
 
-export class OrderHttpDto {
+class Selection {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  unit: string;
+
+  @IsBoolean()
+  registered: boolean;
+
+  @IsBoolean()
+  activeStock: boolean;
+
+  @IsArray()
+  @IsString({ each: true })
+  packageIDS: string[];
+
+  @IsArray()
+  @IsString({ each: true })
+  stockIDS: string[];
+
+  @IsNumber()
+  discount: number;
+
+  @IsNumber()
+  total: number;
+
+  @IsNumber()
+  quantity: number;
+
+  @IsNumber()
+  value: number;
+}
+
+class PaymentMethod {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  method: string;
+
+  @IsNumber()
+  amount: number;
+
+  @IsString()
+  icon: string;
+}
+
+export class Order {
   @IsString()
   @IsNotEmpty()
   id: string;
@@ -21,8 +82,8 @@ export class OrderHttpDto {
   locationID: string;
 
   @IsString()
-  @IsNotEmpty()
-  tableID?: string;
+  @IsOptional()
+  tableID: string | null;
 
   @IsString()
   @IsNotEmpty()
@@ -34,6 +95,8 @@ export class OrderHttpDto {
 
   @IsArray()
   @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => Selection)
   selection: Selection[];
 
   @IsNumber()
@@ -49,11 +112,12 @@ export class OrderHttpDto {
   change: number;
 
   @IsArray()
-  @ArrayNotEmpty()
+  @ValidateNested({ each: true })
+  @Type(() => PaymentMethod)
   paymentMethods: PaymentMethod[];
 
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   observation: string;
 
   @IsNumber()
@@ -61,4 +125,31 @@ export class OrderHttpDto {
 
   @IsNumber()
   modificationDate: number;
+}
+
+class Discount {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsNumber()
+  quantity: number;
+}
+
+export class OrderHttpDto {
+  @IsDefined()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Order)
+  order!: Order;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Discount)
+  discounts: Discount[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => Movement)
+  movements: Movement[];
 }

@@ -1,11 +1,54 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsOptional,
   IsString,
+  ValidateNested,
 } from 'class-validator';
-import { Movement } from 'src/contexts/users/domain/types';
+
+export class Movement {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  inventoryID: string;
+
+  @IsString()
+  @IsNotEmpty()
+  stockID: string;
+
+  @IsString()
+  @IsOptional()
+  supplierID?: string;
+
+  @IsString()
+  @IsNotEmpty()
+  type: string;
+
+  @IsNumber()
+  quantity: number;
+
+  @IsNumber()
+  currentValue: number;
+
+  @IsNumber()
+  date: number;
+
+  @IsString()
+  @IsOptional()
+  paymentMethod?: string;
+
+  @IsNumber()
+  creationDate: number;
+
+  @IsNumber()
+  modificationDate: number;
+}
 
 export class StockHttpDto {
   @IsString()
@@ -21,7 +64,6 @@ export class StockHttpDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
   unit: string;
 
   @IsBoolean()
@@ -31,18 +73,18 @@ export class StockHttpDto {
   reorder: number;
 
   @IsString()
-  @IsNotEmpty()
   reference: string;
 
   @IsString()
-  @IsNotEmpty()
   brand: string;
 
   @IsNumber()
   currentValue: number;
 
   @IsArray()
-  movement: Movement[];
+  @ValidateNested({ each: true })
+  @Type(() => Movement)
+  movements: Movement[];
 
   @IsNumber()
   creationDate: number;

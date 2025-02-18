@@ -64,18 +64,38 @@ export class RecipeRepository extends RecipeRepositoryEntity {
 
   async remove(identifier: string, recipeID: string): Promise<ApiResponse<null>> {
     try {
-      const user = await this.userModel
-        .findOneAndUpdate(
-          { identifier },
-          { $pull: { recipes: { id: recipeID } } },
-          { new: true },
-        )
-        .exec();
+      const user = await this.userModel.findOne({ identifier }).exec();
+
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      // Remove recipe
+      user.recipes = user.recipes.filter(recipe => recipe.id !== recipeID);
+
+      // Remove recipe from products
+      user.products = user.products.map(product => ({
+        ...product,
+        packageIDS: product.packageIDS?.filter(id => id !== recipeID),
+      }));
+
+      // Remove recipe from menu
+      user.menu = user.menu.map(menuItem => ({
+        ...menuItem,
+        packageIDS: menuItem.packageIDS?.filter(id => id !== recipeID),
+      }));
+
+      await user.save();
 
       return new ApiResponse(
-        user ? Status.Success : Status.Error,
-        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Receta removida exitosamente.' : 'Usuario no encontrado.',
+        Status.Success,
+        HttpStatus.OK,
+        'Receta y referencias eliminadas exitosamente.',
         null,
       );
     } catch (error) {

@@ -1,13 +1,18 @@
 import {
   ArrayNotEmpty,
   IsArray,
+  IsDefined,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 import { Selection } from 'src/contexts/users/domain/types';
+import { Order } from '../../common-dto/order.http-dto';
+import { Type } from 'class-transformer';
 
-export class KitchenHttpDto {
+export class Kitchen {
   @IsString()
   @IsNotEmpty()
   id: string;
@@ -33,7 +38,6 @@ export class KitchenHttpDto {
   selection: Selection[];
 
   @IsString()
-  @IsNotEmpty()
   observation: string;
 
   @IsNumber()
@@ -41,4 +45,18 @@ export class KitchenHttpDto {
 
   @IsNumber()
   modificationDate: number;
+}
+
+export class KitchenHttpDto {
+  @IsDefined()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Order)
+  order!: Order;
+
+  @IsDefined()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => Kitchen)
+  kitchen!: Kitchen;
 }

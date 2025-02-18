@@ -73,18 +73,74 @@ export class InventoryRepository extends InventoryRepositoryEntity {
     inventoryID: string,
   ): Promise<ApiResponse<null>> {
     try {
-      const user = await this.userModel
-        .findOneAndUpdate(
-          { identifier },
-          { $pull: { inventories: { id: inventoryID } } },
-          { new: true },
-        )
-        .exec();
+      const user = await this.userModel.findOne({ identifier }).exec();
+
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      // Remove inventory
+      user.inventories = user.inventories.filter(inventory => inventory.id !== inventoryID);
+
+      // Remove stocks by inventoryID
+      const stockIDS = user.stocks
+        .filter(stock => stock.inventoryID === inventoryID)
+        .map(stock => stock.id);
+      user.stocks = user.stocks.filter(stock => stock.inventoryID !== inventoryID);
+
+      // Remove recipes by inventoryID
+      const recipeIDS = user.recipes
+        .filter(recipe => recipe.inventoryID === inventoryID)
+        .map(recipe => recipe.id);
+      user.recipes = user.recipes.filter(recipe => recipe.inventoryID !== inventoryID);
+
+      // Remove stocks from products
+      user.products = user.products.map(product => ({
+        ...product,
+        stockIDS: product.stockIDS?.filter(id => !stockIDS.includes(id)),
+      }));
+
+      // Remove recipes from products
+      user.products = user.products.map(product => ({
+        ...product,
+        packageIDS: product.packageIDS?.filter(id => !recipeIDS.includes(id)),
+      }));
+
+      // Remove stocks from menu
+      user.menu = user.menu.map(menuItem => ({
+        ...menuItem,
+        stockIDS: menuItem.stockIDS?.filter(id => !stockIDS.includes(id)),
+      }));
+
+      // Remove recipes from menu
+      user.menu = user.menu.map(menuItem => ({
+        ...menuItem,
+        packageIDS: menuItem.packageIDS?.filter(id => !recipeIDS.includes(id)),
+      }));
+
+      // Remove inventory from restaurants
+      user.restaurants = user.restaurants.map(restaurant => ({
+        ...restaurant,
+        inventories: restaurant.inventories.filter(id => id !== inventoryID),
+      }));
+
+      // Remove inventory from stores
+      user.stores = user.stores.map(store => ({
+        ...store,
+        inventories: store.inventories.filter(id => id !== inventoryID),
+      }));
+
+      await user.save();
 
       return new ApiResponse(
-        user ? Status.Success : Status.Error,
-        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Inventario eliminado exitosamente.' : 'Usuario no encontrado.',
+        Status.Success,
+        HttpStatus.OK,
+        'Inventario y referencias eliminadas exitosamente.',
         null,
       );
     } catch (error) {

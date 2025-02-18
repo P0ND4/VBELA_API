@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { StockRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.repository.entity';
-import { Stock } from '../../domain/types';
+import { Movement, Stock } from '../../domain/types';
 
 
 @Injectable()
@@ -18,5 +18,17 @@ export class StockUseCase {
 
   async remove(identifier: string, stockID: string): Promise<ApiResponse<null>> {
     return await this.stockRepository.remove(identifier, stockID);
+  }
+  
+  async addMovement(identifier: string, movement: Movement): Promise<ApiResponse<null>> {
+    return await this.stockRepository.addMovement(identifier, movement);
+  }
+
+  async editMovement(identifier: string, movement: Movement): Promise<ApiResponse<null>> {
+    return await this.stockRepository.editMovement(identifier, movement);
+  }
+
+  async removeMovement(identifier: string, movementID: string): Promise<ApiResponse<null>> {
+    return await this.stockRepository.removeMovement(identifier, movementID);
   }
 }

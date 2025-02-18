@@ -12,4 +12,10 @@ export class UserUseCase {
   ): Promise<ApiResponse<PrimitiveUser | null>> {
     return await this.userRepository.findUserByIdentifier(identifier);
   }
+
+  async findAndDeleteUserByIdentifier(
+    identifier: string,
+  ): Promise<ApiResponse<PrimitiveUser | null>> {
+    return await this.userRepository.findAndDeleteUserByIdentifier(identifier);
+  }
 }

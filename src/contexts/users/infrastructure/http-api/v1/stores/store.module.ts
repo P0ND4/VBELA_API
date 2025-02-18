@@ -12,11 +12,13 @@ import { StoreUseCase } from 'src/contexts/users/application/stores/store.use-ca
 import { ProductRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/product.repository.entity';
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
 import { StoreRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/store.repository.entity';
+import { OrderEvents } from '../../../repositories/common/order.events';
 
 @Module({
   imports: [SchemaModule],
   controllers: [ProductController, SaleController, StoreController],
   providers: [
+    OrderEvents,
     ProductRepository,
     SaleRepository,
     StoreRepository,

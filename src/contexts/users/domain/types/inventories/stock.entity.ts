@@ -6,7 +6,7 @@ export type Movement = {
   type: string;
   quantity: number;
   currentValue: number;
-  date: string;
+  date: number;
   paymentMethod?: string;
   creationDate: number;
   modificationDate: number;
@@ -22,7 +22,7 @@ export interface Stock {
   reference: string;
   brand: string;
   currentValue: number;
-  movement: Movement[];
+  movements: Movement[];
   creationDate: number;
   modificationDate: number;
 }

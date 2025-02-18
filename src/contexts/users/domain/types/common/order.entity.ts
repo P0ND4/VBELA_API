@@ -1,11 +1,14 @@
+import { Movement } from "../inventories";
+import { Discount } from "./element.entity";
+
 export type Selection = {
   id: string;
   name: string;
-  unit?: string;
+  unit: string;
   registered: boolean;
-  activeStock?: boolean;
-  packageIDS?: string[];
-  stockIDS?: string[];
+  activeStock: boolean;
+  packageIDS: string[];
+  stockIDS: string[];
   discount: number;
   total: number;
   quantity: number;
@@ -23,7 +26,7 @@ export interface Order {
   id: string;
   invoice: string;
   locationID: string;
-  tableID?: string;
+  tableID?: string | null;
   order: string;
   status: string;
   selection: Selection[];
@@ -35,4 +38,10 @@ export interface Order {
   observation: string;
   creationDate: number;
   modificationDate: number;
+}
+
+export interface OrderDTO {
+  order: Order;
+  discounts: Discount[];
+  movements: Movement[];
 }

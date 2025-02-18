@@ -1,4 +1,4 @@
-import { Controller, Get, Request, UseGuards } from '@nestjs/common';
+import { Controller, Delete, Get, Request, UseGuards } from '@nestjs/common';
 import { V1_USER } from '../../../route.constants';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { UserUseCase } from 'src/contexts/users/application/user/user.use-case';
@@ -13,5 +13,10 @@ export class UserController {
   @Get('')
   getProfile(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
     return this.userUseCase.findUserByIdentifier(req.user.identifier);
+  }
+
+  @Delete('')
+  removeProfile(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
+    return this.userUseCase.findAndDeleteUserByIdentifier(req.user.identifier);
   }
 }

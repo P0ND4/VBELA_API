@@ -19,7 +19,6 @@ export class InventoryHttpDto {
   visible: string;
 
   @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsBoolean()

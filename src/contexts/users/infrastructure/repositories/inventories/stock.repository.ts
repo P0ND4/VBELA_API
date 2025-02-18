@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
-import { Stock } from '../../../domain/types';
+import { Movement, Stock } from '../../../domain/types';
 import { ApiResponse, Status } from '../../../../shared/api.response';
 import { StockRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.repository.entity';
 
@@ -25,7 +25,7 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
-        user ? 'Stock agregada exitosamente.' : 'Usuario no encontrado.',
+        user ? 'Stock agregado exitosamente.' : 'Usuario no encontrado.',
         null,
       );
     } catch (error) {
@@ -65,18 +65,162 @@ export class StockRepository extends StockRepositoryEntity {
     stockID: string,
   ): Promise<ApiResponse<null>> {
     try {
-      const user = await this.userModel
-        .findOneAndUpdate(
-          { identifier },
-          { $pull: { stocks: { id: stockID } } },
-          { new: true },
-        )
-        .exec();
+      const user = await this.userModel.findOne({ identifier }).exec();
+
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      // Remove stock
+      user.stocks = user.stocks.filter((stock) => stock.id !== stockID);
+
+      // Remove stock from products
+      user.products = user.products.map((product) => ({
+        ...product,
+        stockIDS: product.stockIDS?.filter((id) => id !== stockID),
+      }));
+
+      // Remove stock from menu
+      user.menu = user.menu.map((menuItem) => ({
+        ...menuItem,
+        stockIDS: menuItem.stockIDS?.filter((id) => id !== stockID),
+      }));
+
+      // Remove stock from recipes
+      user.recipes = user.recipes.map((recipe) => ({
+        ...recipe,
+        ingredients: recipe.ingredients.filter(
+          (ingredient) => ingredient.id !== stockID,
+        ),
+      }));
+
+      await user.save();
 
       return new ApiResponse(
-        user ? Status.Success : Status.Error,
-        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Stock removido exitosamente.' : 'Usuario no encontrado.',
+        Status.Success,
+        HttpStatus.OK,
+        'Stock y referencias eliminadas exitosamente.',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  private updateStockMovement(
+    user: User,
+    movement: Movement,
+    updater: (stock: Stock, movement: Movement) => Stock,
+  ) {
+    user.stocks = user.stocks.map(stock => {
+      return stock.id === movement.stockID ? updater(stock, movement) : stock;
+    });
+  }
+
+  async addMovement(
+    identifier: string,
+    movement: Movement,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel.findOne({ identifier }).exec();
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      this.updateStockMovement(user, movement, (stock, movement) => ({
+        ...stock,
+        currentValue: movement.currentValue,
+        movements: [...stock.movements, movement],
+      }));
+
+      await user.save();
+      return new ApiResponse(
+        Status.Success,
+        HttpStatus.OK,
+        'Movimiento agregado exitosamente.',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async editMovement(
+    identifier: string,
+    movement: Movement,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel.findOne({ identifier }).exec();
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      this.updateStockMovement(user, movement, (stock, movement) => ({
+        ...stock,
+        movements: stock.movements.map(m => (m.id === movement.id ? movement : m)),
+      }));
+
+      await user.save();
+      return new ApiResponse(
+        Status.Success,
+        HttpStatus.OK,
+        'Movimiento editado exitosamente.',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async removeMovement(
+    identifier: string,
+    movementID: string,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel.findOne({ identifier }).exec();
+      if (!user) {
+        return new ApiResponse(
+          Status.Error,
+          HttpStatus.NO_CONTENT,
+          'Usuario no encontrado.',
+          null,
+        );
+      }
+
+      user.stocks = user.stocks.map(stock => ({
+        ...stock,
+        movements: stock.movements.filter(m => m.id !== movementID),
+      }));
+
+      await user.save();
+      return new ApiResponse(
+        Status.Success,
+        HttpStatus.OK,
+        'Movimiento eliminado exitosamente.',
         null,
       );
     } catch (error) {

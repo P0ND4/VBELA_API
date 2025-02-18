@@ -1,18 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
-import { Order } from '../../domain/types';
+import { OrderDTO } from '../../domain/types';
 
 @Injectable()
 export class SaleUseCase {
   constructor(private readonly saleRepository: SaleRepositoryEntity) {}
 
-  async add(identifier: string, sale: Order): Promise<ApiResponse<null>> {
-    return await this.saleRepository.add(identifier, sale);
+  async add(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
+    return await this.saleRepository.add(identifier, dto);
   }
 
-  async edit(identifier: string, sale: Order): Promise<ApiResponse<null>> {
-    return await this.saleRepository.edit(identifier, sale);
+  async edit(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
+    return await this.saleRepository.edit(identifier, dto);
   }
 
   async remove(identifier: string, saleID: string): Promise<ApiResponse<null>> {

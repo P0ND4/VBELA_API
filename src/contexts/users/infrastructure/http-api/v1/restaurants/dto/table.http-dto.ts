@@ -14,11 +14,6 @@ export class TableHttpDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  visible: string;
-
-  @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsBoolean()

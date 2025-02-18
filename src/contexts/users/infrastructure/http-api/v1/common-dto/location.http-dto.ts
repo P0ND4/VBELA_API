@@ -16,11 +16,6 @@ export class LocationHttpDto {
   name: string;
 
   @IsString()
-  @IsNotEmpty()
-  visible: string;
-
-  @IsString()
-  @IsNotEmpty()
   description: string;
 
   @IsArray()
