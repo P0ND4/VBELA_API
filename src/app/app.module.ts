@@ -9,6 +9,7 @@ import { MailService } from 'src/contexts/shared/mail/mail.service';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { RedisModule } from 'src/database/redis.module';
 import { APP_GUARD } from '@nestjs/core';
+import { GatewayModule } from 'src/contexts/users/infrastructure/websockets/websocket.module';
 
 @Module({
   imports: [
@@ -17,7 +18,7 @@ import { APP_GUARD } from '@nestjs/core';
       imports: [RedisModule],
       inject: ['REDIS_THROTTLER'],
       useFactory: (redisThrottler) => ({
-        throttlers: [{ ttl: minutes(1), limit: 60 }], // 60 solicitudes por minuto
+        throttlers: [{ ttl: minutes(1), limit: 60 }],
         storage: new ThrottlerStorageRedisService(redisThrottler),
       }),
     }),
@@ -26,6 +27,7 @@ import { APP_GUARD } from '@nestjs/core';
       inject: [ConfigService],
     }),
     MongooseDatabaseModule,
+    GatewayModule,
     MainModule,
   ],
   providers: [

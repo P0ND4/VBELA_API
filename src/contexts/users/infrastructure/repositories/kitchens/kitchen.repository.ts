@@ -47,11 +47,11 @@ export class KitchenRepository extends KitchenRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'kitchens.id': kitchen.id },
+          { identifier, 'kitchens.id': id },
           { $set: { 'kitchens.$': kitchen } },
           { new: true },
         )

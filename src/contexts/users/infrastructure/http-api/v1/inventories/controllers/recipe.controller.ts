@@ -27,12 +27,13 @@ export class RecipeController {
     return this.recipeUseCase.add(req.user.identifier, recipeHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() recipeHttpDto: RecipeHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.recipeUseCase.edit(req.user.identifier, recipeHttpDto);
+    return this.recipeUseCase.edit(req.user.identifier, id, recipeHttpDto);
   }
 
   @Delete(':id')

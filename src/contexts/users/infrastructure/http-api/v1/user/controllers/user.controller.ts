@@ -11,12 +11,19 @@ export class UserController {
   constructor(private readonly userUseCase: UserUseCase) {}
 
   @Get('')
-  getProfile(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
+  findUserByIdentifier(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
     return this.userUseCase.findUserByIdentifier(req.user.identifier);
   }
 
+  @Get('information')
+  getUserInformation(@Request() req): Promise<ApiResponse<Partial<PrimitiveUser> | null>> {
+    return this.userUseCase.getUserInformation(req.user.identifier, req.user.collaborator);
+  }
+
   @Delete('')
-  removeProfile(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
+  findAndDeleteUserByIdentifier(@Request() req): Promise<ApiResponse<PrimitiveUser | null>> {
     return this.userUseCase.findAndDeleteUserByIdentifier(req.user.identifier);
   }
 }
+
+//TODO CONTINUAR CON EL FRONTEND Y LUEGO TERMINAR ESTO

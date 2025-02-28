@@ -27,12 +27,13 @@ export class SaleController {
     return this.saleUseCase.add(req.user.identifier, saleHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() saleHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.saleUseCase.edit(req.user.identifier, saleHttpDto);
+    return this.saleUseCase.edit(req.user.identifier, id, saleHttpDto);
   }
 
   @Delete(':id')

@@ -36,11 +36,15 @@ export class StoreRepository extends StoreRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, store: Location): Promise<ApiResponse<null>> {
+  async edit(
+    identifier: string,
+    id: string,
+    store: Location,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'stores.id': store.id },
+          { identifier, 'stores.id': id },
           { $set: { 'stores.$': store } },
           { new: true },
         )
@@ -49,7 +53,9 @@ export class StoreRepository extends StoreRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Tienda editada exitosamente.' : 'Usuario o tienda no encontrada.',
+        user
+          ? 'Tienda editada exitosamente.'
+          : 'Usuario o tienda no encontrada.',
         null,
       );
     } catch (error) {
@@ -60,13 +66,20 @@ export class StoreRepository extends StoreRepositoryEntity {
     }
   }
 
-  async remove(identifier: string, storeID: string): Promise<ApiResponse<null>> {
+  async remove(
+    identifier: string,
+    storeID: string,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
           {
-            $pull: { stores: { id: storeID }, products: { locationID: storeID } },
+            $pull: {
+              stores: { id: storeID },
+              products: { locationID: storeID },
+              productGroup: { locationID: storeID },
+            },
           },
           { new: true },
         )
@@ -75,7 +88,9 @@ export class StoreRepository extends StoreRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Tienda y productos removidos exitosamente.' : 'Usuario no encontrado.',
+        user
+          ? 'Tienda y productos removidos exitosamente.'
+          : 'Usuario no encontrado.',
         null,
       );
     } catch (error) {

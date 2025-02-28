@@ -27,12 +27,13 @@ export class KitchenController {
     return this.kitchenUseCase.add(req.user.identifier, kitchenHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() kitchenHttpDto: Kitchen,
   ): Promise<ApiResponse<null>> {
-    return this.kitchenUseCase.edit(req.user.identifier, kitchenHttpDto);
+    return this.kitchenUseCase.edit(req.user.identifier, id, kitchenHttpDto);
   }
 
   @Delete(':id')

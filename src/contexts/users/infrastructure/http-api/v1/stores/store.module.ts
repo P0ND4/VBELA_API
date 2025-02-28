@@ -13,23 +13,35 @@ import { ProductRepositoryEntity } from 'src/contexts/users/domain/repositories/
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
 import { StoreRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/store.repository.entity';
 import { OrderEvents } from '../../../repositories/common/order.events';
+import { ProductGroupController } from './controllers/product.group.controller';
+import { ProductGroupRepository } from '../../../repositories/stores/product.group.repository';
+import { ProductGroupUseCase } from 'src/contexts/users/application/stores/product.group.use-case';
+import { ProductGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/product.group.repository.entity';
 
 @Module({
   imports: [SchemaModule],
-  controllers: [ProductController, SaleController, StoreController],
+  controllers: [
+    ProductController,
+    SaleController,
+    StoreController,
+    ProductGroupController,
+  ],
   providers: [
     OrderEvents,
     ProductRepository,
     SaleRepository,
     StoreRepository,
+    ProductGroupRepository,
 
     ProductUseCase,
     SaleUseCase,
     StoreUseCase,
+    ProductGroupUseCase,
 
     { provide: ProductRepositoryEntity, useExisting: ProductRepository },
     { provide: SaleRepositoryEntity, useExisting: SaleRepository },
     { provide: StoreRepositoryEntity, useExisting: StoreRepository },
+    { provide: ProductGroupRepositoryEntity, useExisting: ProductGroupRepository },
   ],
 })
 export class StoreModule {}

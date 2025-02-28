@@ -11,8 +11,8 @@ export class StoreUseCase {
     return await this.storeRepository.add(identifier, store);
   }
 
-  async edit(identifier: string, store: Location): Promise<ApiResponse<null>> {
-    return await this.storeRepository.edit(identifier, store);
+  async edit(identifier: string, id: string, store: Location): Promise<ApiResponse<null>> {
+    return await this.storeRepository.edit(identifier, id, store);
   }
 
   async remove(identifier: string, storeID: string): Promise<ApiResponse<null>> {

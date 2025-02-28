@@ -11,8 +11,8 @@ export class ProductUseCase {
     return await this.productRepository.add(identifier, product);
   }
 
-  async edit(identifier: string, product: Element): Promise<ApiResponse<null>> {
-    return await this.productRepository.edit(identifier, product);
+  async edit(identifier: string, id: string, product: Element): Promise<ApiResponse<null>> {
+    return await this.productRepository.edit(identifier, id, product);
   }
 
   async remove(identifier: string, productID: string): Promise<ApiResponse<null>> {

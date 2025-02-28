@@ -27,12 +27,13 @@ export class StockController {
     return this.stockUseCase.add(req.user.identifier, stockHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() stockHttpDto: StockHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.edit(req.user.identifier, stockHttpDto);
+    return this.stockUseCase.edit(req.user.identifier, id, stockHttpDto);
   }
 
   @Delete(':id')

@@ -11,8 +11,8 @@ export class RestaurantUseCase {
     return await this.restaurantRepository.add(identifier, restaurant);
   }
 
-  async edit(identifier: string, restaurant: Location): Promise<ApiResponse<null>> {
-    return await this.restaurantRepository.edit(identifier, restaurant);
+  async edit(identifier: string, id: string, restaurant: Location): Promise<ApiResponse<null>> {
+    return await this.restaurantRepository.edit(identifier, id, restaurant);
   }
 
   async remove(identifier: string, restaurantID: string): Promise<ApiResponse<null>> {

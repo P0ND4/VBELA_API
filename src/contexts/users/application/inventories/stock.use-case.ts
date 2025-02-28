@@ -12,8 +12,8 @@ export class StockUseCase {
     return await this.stockRepository.add(identifier, stock);
   }
 
-  async edit(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
-    return await this.stockRepository.edit(identifier, stock);
+  async edit(identifier: string, id: string, stock: Stock): Promise<ApiResponse<null>> {
+    return await this.stockRepository.edit(identifier, id, stock);
   }
 
   async remove(identifier: string, stockID: string): Promise<ApiResponse<null>> {

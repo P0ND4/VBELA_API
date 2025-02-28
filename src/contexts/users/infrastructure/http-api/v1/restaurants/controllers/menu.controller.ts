@@ -27,12 +27,13 @@ export class MenuController {
     return this.menuUseCase.add(req.user.identifier, menuHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() menuHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.menuUseCase.edit(req.user.identifier, menuHttpDto);
+    return this.menuUseCase.edit(req.user.identifier, id, menuHttpDto);
   }
 
   @Delete(':id')

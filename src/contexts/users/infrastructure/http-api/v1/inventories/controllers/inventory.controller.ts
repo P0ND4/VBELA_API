@@ -27,12 +27,13 @@ export class InventoryController {
     return this.inventoryUseCase.add(req.user.identifier, inventoryHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() inventoryHttpDto: InventoryHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.inventoryUseCase.edit(req.user.identifier, inventoryHttpDto);
+    return this.inventoryUseCase.edit(req.user.identifier, id, inventoryHttpDto);
   }
 
   @Delete(':id')

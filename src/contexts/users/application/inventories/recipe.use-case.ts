@@ -12,8 +12,8 @@ export class RecipeUseCase {
     return await this.inventoryRepository.add(identifier, recipe);
   }
 
-  async edit(identifier: string, recipe: Recipe): Promise<ApiResponse<null>> {
-    return await this.inventoryRepository.edit(identifier, recipe);
+  async edit(identifier: string, id: string, recipe: Recipe): Promise<ApiResponse<null>> {
+    return await this.inventoryRepository.edit(identifier, id, recipe);
   }
 
   async remove(identifier: string, recipeID: string): Promise<ApiResponse<null>> {

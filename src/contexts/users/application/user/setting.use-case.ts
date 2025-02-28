@@ -10,7 +10,10 @@ import {
 export class SettingUseCase {
   constructor(private readonly settingRepository: SettingRepositoryEntity) {}
 
-  async darkMode(identifier: string, darkMode: boolean): Promise<ApiResponse<null>> {
+  async darkMode(
+    identifier: string,
+    darkMode: boolean,
+  ): Promise<ApiResponse<null>> {
     return await this.settingRepository.darkMode(identifier, darkMode);
   }
 
@@ -44,10 +47,12 @@ export class SettingUseCase {
 
   async editPaymentMethods(
     identifier: string,
+    id: string,
     paymentMethods: PaymentMethods,
   ): Promise<ApiResponse<null>> {
     return await this.settingRepository.editPaymentMethods(
       identifier,
+      id,
       paymentMethods,
     );
   }

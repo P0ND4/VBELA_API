@@ -7,6 +7,6 @@ export abstract class SettingRepositoryEntity {
   abstract coin(identifier: string, coin: string): Promise<ApiResponse<null>>;
   abstract color(identifier: string, color: number): Promise<ApiResponse<null>>;
   abstract addPaymentMethods(identifier: string, paymentMethods: PaymentMethods): Promise<ApiResponse<null>>;
-  abstract editPaymentMethods(identifier: string, paymentMethods: PaymentMethods): Promise<ApiResponse<null>>;
+  abstract editPaymentMethods(identifier: string, id: string, paymentMethods: PaymentMethods): Promise<ApiResponse<null>>;
   abstract removePaymentMethods(identifier: string, paymentMethodsId: string): Promise<ApiResponse<null>>;
 }

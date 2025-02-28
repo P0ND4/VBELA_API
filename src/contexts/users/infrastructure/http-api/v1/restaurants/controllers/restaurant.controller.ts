@@ -27,12 +27,13 @@ export class RestaurantController {
     return this.restaurantUseCase.add(req.user.identifier, restaurantHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() restaurantHttpDto: LocationHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.restaurantUseCase.edit(req.user.identifier, restaurantHttpDto);
+    return this.restaurantUseCase.edit(req.user.identifier, id, restaurantHttpDto);
   }
 
   @Delete(':id')

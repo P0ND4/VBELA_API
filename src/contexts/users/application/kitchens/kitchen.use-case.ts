@@ -11,8 +11,8 @@ export class KitchenUseCase {
     return await this.kitchenRepository.add(identifier, dto);
   }
 
-  async edit(identifier: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
-    return await this.kitchenRepository.edit(identifier, kitchen);
+  async edit(identifier: string, id: string, kitchen: Kitchen): Promise<ApiResponse<null>> {
+    return await this.kitchenRepository.edit(identifier, id, kitchen);
   }
 
   async remove(identifier: string, kitchenID: string): Promise<ApiResponse<null>> {

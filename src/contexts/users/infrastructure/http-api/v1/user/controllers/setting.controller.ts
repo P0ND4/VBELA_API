@@ -78,10 +78,12 @@ export class SettingController {
   @Put('payment-methods')
   async editPaymentMethods(
     @Request() req,
+    @Param('id') id: string,
     @Body() paymentMethodsHttpDto: PaymentMethodsHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.editPaymentMethods(
       req.user.identifier,
+      id,
       paymentMethodsHttpDto,
     );
   }

@@ -35,12 +35,13 @@ export class TableController {
     return this.tableUseCase.addMultiple(req.user.identifier, tablesHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() tableHttpDto: TableHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.tableUseCase.edit(req.user.identifier, tableHttpDto);
+    return this.tableUseCase.edit(req.user.identifier, id, tableHttpDto);
   }
 
   @Delete(':id')

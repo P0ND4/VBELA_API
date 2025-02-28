@@ -36,11 +36,11 @@ export class StockRepository extends StockRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, stock: Stock): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'stocks.id': stock.id },
+          { identifier, 'stocks.id': id },
           { $set: { 'stocks.$': stock } },
           { new: true },
         )

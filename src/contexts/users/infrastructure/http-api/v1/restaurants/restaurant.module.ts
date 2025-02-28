@@ -17,6 +17,10 @@ import { OrderRepositoryEntity } from 'src/contexts/users/domain/repositories/re
 import { RestaurantRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/restaurant.repository.entity';
 import { TableRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/table.repository.entity';
 import { OrderEvents } from '../../../repositories/common/order.events';
+import { MenuGroupController } from './controllers/menu.group.controller';
+import { MenuGroupRepository } from '../../../repositories/restaurants/menu.group.repository';
+import { MenuGroupUseCase } from 'src/contexts/users/application/restaurants/menu.group.use-case';
+import { MenuGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/menu.group.repository.entity';
 
 @Module({
   imports: [SchemaModule],
@@ -25,6 +29,7 @@ import { OrderEvents } from '../../../repositories/common/order.events';
     OrderController,
     RestaurantController,
     TableController,
+    MenuGroupController,
   ],
   providers: [
     OrderEvents,
@@ -32,16 +37,19 @@ import { OrderEvents } from '../../../repositories/common/order.events';
     OrderRepository,
     RestaurantRepository,
     TableRepository,
+    MenuGroupRepository,
 
     MenuUseCase,
     OrderUseCase,
     RestaurantUseCase,
     TableUseCase,
+    MenuGroupUseCase,
 
     { provide: MenuRepositoryEntity, useExisting: MenuRepository },
     { provide: OrderRepositoryEntity, useExisting: OrderRepository },
     { provide: RestaurantRepositoryEntity, useExisting: RestaurantRepository },
     { provide: TableRepositoryEntity, useExisting: TableRepository },
+    { provide: MenuGroupRepositoryEntity, useExisting: MenuGroupRepository },
   ],
 })
 export class RestaurantModule {}

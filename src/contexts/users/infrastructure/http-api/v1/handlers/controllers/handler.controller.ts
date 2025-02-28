@@ -27,12 +27,13 @@ export class HandlerController {
     return this.handlerUseCase.add(req.user.identifier, handlerHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() handlerHttpDto: HandlerHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.handlerUseCase.edit(req.user.identifier, handlerHttpDto);
+    return this.handlerUseCase.edit(req.user.identifier, id, handlerHttpDto);
   }
 
   @Delete(':id')

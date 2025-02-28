@@ -60,11 +60,11 @@ export class TableRepository extends TableRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, table: Table): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, table: Table): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'tables.id': table.id },
+          { identifier, 'tables.id': id },
           { $set: { 'tables.$': table } },
           { new: true },
         )

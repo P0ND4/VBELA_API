@@ -36,11 +36,11 @@ export class RecipeRepository extends RecipeRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, recipe: Recipe): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, recipe: Recipe): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'recipes.id': recipe.id },
+          { identifier, 'recipes.id': id },
           { $set: { 'recipes.$': recipe } },
           { new: true },
         )

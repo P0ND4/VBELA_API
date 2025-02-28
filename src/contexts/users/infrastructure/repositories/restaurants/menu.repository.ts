@@ -32,11 +32,11 @@ export class MenuRepository extends MenuRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, menu: Element): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, menu: Element): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'menu.id': menu.id },
+          { identifier, 'menu.id': id },
           { $set: { 'menu.$': menu } },
           { new: true },
         )

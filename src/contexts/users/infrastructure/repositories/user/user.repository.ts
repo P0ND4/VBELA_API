@@ -14,9 +14,23 @@ export class UserRepository extends UserRepositoryEntity {
 
   async findUserByIdentifier(
     identifier: string,
-  ): Promise<ApiResponse<PrimitiveUser | null>> {
+  ): Promise<ApiResponse<any | null>> {
+    const user = await this.userModel.find().exec();
+    const sessions = user.filter((user) => user.identifier === identifier);
+
+    return new ApiResponse(
+      !!sessions.length ? Status.Success : Status.Error,
+      !!sessions.length ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+      !!sessions.length ? 'Usuario encontrado' : 'Usuario no encontrado',
+      !!sessions.length ? sessions : null,
+    );
+  }
+  async getUserInformation(
+    identifier: string,
+    collaborator: string | null,
+  ): Promise<ApiResponse<Partial<PrimitiveUser> | null>> {
     const user = await this.userModel.findOne({ identifier }).exec();
-    
+
     return new ApiResponse(
       user ? Status.Success : Status.Error,
       user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
@@ -24,12 +38,11 @@ export class UserRepository extends UserRepositoryEntity {
       user ? UserEntity.transform(user).toPrimitives() : null,
     );
   }
-
   async findAndDeleteUserByIdentifier(
     identifier: string,
   ): Promise<ApiResponse<PrimitiveUser | null>> {
     const user = await this.userModel.findOneAndDelete({ identifier }).exec();
-    
+
     return new ApiResponse(
       user ? Status.Success : Status.Error,
       user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
@@ -38,3 +51,5 @@ export class UserRepository extends UserRepositoryEntity {
     );
   }
 }
+
+//TODO CONTINUAR CON EL FRONTEND Y LUEGO TERMINAR ESTO

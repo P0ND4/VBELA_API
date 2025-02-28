@@ -15,8 +15,8 @@ export class TableUseCase {
     return await this.tableRepository.addMultiple(identifier, tables);
   }
 
-  async edit(identifier: string, table: Table): Promise<ApiResponse<null>> {
-    return await this.tableRepository.edit(identifier, table);
+  async edit(identifier: string, id: string, table: Table): Promise<ApiResponse<null>> {
+    return await this.tableRepository.edit(identifier, id, table);
   }
 
   async remove(identifier: string, tableID: string): Promise<ApiResponse<null>> {

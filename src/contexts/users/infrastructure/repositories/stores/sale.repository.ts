@@ -16,6 +16,19 @@ export class SaleRepository extends SaleRepositoryEntity {
     super();
   }
 
+  private async discount(dto: OrderDTO) {
+    if (!!dto.discounts.length) {
+      const discountUpdates = dto.discounts.map((discount) => ({
+        updateOne: {
+          filter: { 'products.id': discount.id },
+          update: { $inc: { 'products.$.stock': -discount.quantity } },
+        },
+      }));
+
+      await this.userModel.bulkWrite(discountUpdates);
+    }
+  }
+
   async add(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
@@ -27,17 +40,7 @@ export class SaleRepository extends SaleRepositoryEntity {
         .exec();
 
       if (user) {
-        if (!!dto.discounts.length) {
-          const discountUpdates = dto.discounts.map((discount) => ({
-            updateOne: {
-              filter: { 'products.id': discount.id },
-              update: { $inc: { 'products.$.stock': -discount.quantity } },
-            },
-          }));
-
-          await this.userModel.bulkWrite(discountUpdates);
-        }
-
+        await this.discount(dto);
         await this.orderEvents.events(dto);
       }
 
@@ -55,17 +58,24 @@ export class SaleRepository extends SaleRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
+  async edit(
+    identifier: string,
+    id: string,
+    dto: OrderDTO,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'sales.id': dto.order.id },
+          { identifier, 'sales.id': id },
           { $set: { 'sales.$': dto.order } },
           { new: true },
         )
         .exec();
 
-      if (user) await this.orderEvents.events(dto);
+      if (user) {
+        await this.discount(dto);
+        await this.orderEvents.events(dto);
+      }
 
       return new ApiResponse(
         user ? Status.Success : Status.Error,

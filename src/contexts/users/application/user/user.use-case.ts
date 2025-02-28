@@ -13,9 +13,18 @@ export class UserUseCase {
     return await this.userRepository.findUserByIdentifier(identifier);
   }
 
+  async getUserInformation(
+    identifier: string,
+    collaborator: string | null
+  ): Promise<ApiResponse<Partial<PrimitiveUser> | null>> {
+    return await this.userRepository.getUserInformation(identifier, collaborator);
+  }
+
   async findAndDeleteUserByIdentifier(
     identifier: string,
   ): Promise<ApiResponse<PrimitiveUser | null>> {
     return await this.userRepository.findAndDeleteUserByIdentifier(identifier);
   }
 }
+
+//TODO CONTINUAR CON EL FRONTEND Y LUEGO TERMINAR ESTO

@@ -27,12 +27,13 @@ export class OrderController {
     return this.orderUseCase.add(req.user.identifier, orderHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() orderHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.orderUseCase.edit(req.user.identifier, orderHttpDto);
+    return this.orderUseCase.edit(req.user.identifier, id, orderHttpDto);
   }
 
   @Delete(':id')

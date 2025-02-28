@@ -36,11 +36,11 @@ export class ProductRepository extends ProductRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, product: Element): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, product: Element): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'products.id': product.id },
+          { identifier, 'products.id': id },
           { $set: { 'products.$': product } },
           { new: true },
         )

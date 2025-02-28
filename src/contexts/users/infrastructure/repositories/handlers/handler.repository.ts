@@ -36,11 +36,11 @@ export class HandlerRepository extends HandlerRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, handler: Handler): Promise<ApiResponse<null>> {
+  async edit(identifier: string, id: string, handler: Handler): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'handlers.id': handler.id },
+          { identifier, 'handlers.id': id },
           { $set: { 'handlers.$': handler } },
           { new: true },
         )

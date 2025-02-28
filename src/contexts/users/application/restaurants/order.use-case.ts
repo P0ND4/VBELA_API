@@ -11,8 +11,8 @@ export class OrderUseCase {
     return await this.orderRepository.add(identifier, dto);
   }
 
-  async edit(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
-    return await this.orderRepository.edit(identifier, dto);
+  async edit(identifier: string, id: string, dto: OrderDTO): Promise<ApiResponse<null>> {
+    return await this.orderRepository.edit(identifier, id, dto);
   }
 
   async remove(identifier: string, orderID: string): Promise<ApiResponse<null>> {

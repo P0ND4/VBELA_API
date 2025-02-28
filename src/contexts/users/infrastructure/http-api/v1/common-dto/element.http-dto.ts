@@ -1,11 +1,22 @@
+import { Type } from 'class-transformer';
 import {
   IsArray,
   IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsString,
+  ValidateNested,
 } from 'class-validator';
 
+export class SubCategory {
+  @IsString()
+  @IsNotEmpty()
+  category: string;
+
+  @IsString()
+  @IsNotEmpty()
+  subcategory: string;
+}
 export class ElementHttpDto {
   @IsString()
   @IsNotEmpty()
@@ -23,43 +34,45 @@ export class ElementHttpDto {
   price: number;
 
   @IsNumber()
-  cost?: number;
+  cost: number;
 
   @IsNumber()
-  promotion?: number;
+  promotion: number;
 
   @IsArray()
-  category?: string[];
+  categories: string[];
 
   @IsArray()
-  subcategory?: string[];
+  @ValidateNested({ each: true })
+  @Type(() => SubCategory)
+  subcategories: SubCategory[];
 
   @IsString()
-  description?: string;
+  description: string;
 
   @IsString()
-  code?: string;
+  code: string;
 
   @IsString()
-  unit?: string;
+  unit: string;
 
   @IsBoolean()
-  highlight?: boolean;
+  highlight: boolean;
 
   @IsBoolean()
-  activeStock?: boolean;
+  activeStock: boolean;
 
   @IsNumber()
-  stock?: number;
+  stock: number;
 
   @IsNumber()
-  minStock?: number;
+  minStock: number;
 
   @IsArray()
-  stockIDS?: string[];
+  stockIDS: string[];
 
   @IsArray()
-  packageIDS?: string[];
+  packageIDS: string[];
 
   @IsNumber()
   creationDate: number;

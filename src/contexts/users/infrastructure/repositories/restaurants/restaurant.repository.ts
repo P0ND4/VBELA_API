@@ -41,12 +41,13 @@ export class RestaurantRepository extends RestaurantRepositoryEntity {
 
   async edit(
     identifier: string,
+    id: string,
     restaurant: Location,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'restaurants.id': restaurant.id },
+          { identifier, 'restaurants.id': id },
           { $set: { 'restaurants.$': restaurant } },
           { new: true },
         )
@@ -81,6 +82,7 @@ export class RestaurantRepository extends RestaurantRepositoryEntity {
               restaurants: { id: restaurantID },
               menu: { locationID: restaurantID },
               tables: { restaurantID },
+              menuGroup: { locationID: restaurantID },
             },
           },
           { new: true },

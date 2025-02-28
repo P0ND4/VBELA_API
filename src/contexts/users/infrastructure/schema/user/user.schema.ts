@@ -1,6 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, HydratedDocument } from 'mongoose';
 import {
+  Collaborator,
   Element,
   Inventory,
   InvoiceInformation,
@@ -11,8 +12,9 @@ import {
   Recipe,
   Stock,
   Table,
+  Handler
 } from 'src/contexts/users/domain/types';
-import { Handler } from 'src/contexts/users/domain/types/handlers';
+import { Group } from 'src/contexts/users/domain/types/common/group.entity';
 
 export type UserDocument = HydratedDocument<User>;
 
@@ -75,6 +77,9 @@ export class User extends Document {
   restaurants: Location[];
 
   @Prop({ type: [Object], default: [] })
+  productGroup: Group[];
+
+  @Prop({ type: [Object], default: [] })
   products: Element[];
 
   @Prop({ type: [Object], default: [] })
@@ -84,6 +89,9 @@ export class User extends Document {
   kitchens: Kitchen[];
 
   @Prop({ type: [Object], default: [] })
+  menuGroup: Group[];
+
+  @Prop({ type: [Object], default: [] })
   menu: Element[];
 
   @Prop({ type: [Object], default: [] })
@@ -91,6 +99,9 @@ export class User extends Document {
 
   @Prop({ type: [Object], default: [] })
   tables: Table[];
+
+  @Prop({ type: [Object], default: [] })
+  collaborators: Collaborator[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

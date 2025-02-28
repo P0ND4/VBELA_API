@@ -134,12 +134,13 @@ export class SettingRepository extends SettingRepositoryEntity {
 
   async editPaymentMethods(
     identifier: string,
+    id: string,
     paymentMethods: PaymentMethods,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'paymentMethods.id': paymentMethods.id },
+          { identifier, 'paymentMethods.id': id },
           { $set: { 'paymentMethods.$': paymentMethods } },
           { new: true },
         )

@@ -27,12 +27,13 @@ export class ProductController {
     return this.productUseCase.add(req.user.identifier, productHttpDto);
   }
 
-  @Put('')
+  @Put(':id')
   async edit(
     @Req() req,
+    @Param('id') id: string,
     @Body() productHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.productUseCase.edit(req.user.identifier, productHttpDto);
+    return this.productUseCase.edit(req.user.identifier, id, productHttpDto);
   }
 
   @Delete(':id')

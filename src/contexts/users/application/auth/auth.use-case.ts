@@ -2,7 +2,7 @@ import { HttpStatus, Injectable } from '@nestjs/common';
 import { AuthRepositoryEntity } from '../../domain/repositories/auth/auth.repository.entity';
 import { JwtService } from '@nestjs/jwt';
 import { ApiResponse, Status } from '../../../shared/api.response';
-import { TokenBlacklistService } from '../../infrastructure/http-api/v1/auth/services/token-blacklist.service';
+import { TokenBlacklistService } from '../../infrastructure/services/token-blacklist.service';
 
 @Injectable()
 export class AuthUseCase {
@@ -12,12 +12,26 @@ export class AuthUseCase {
     private tokenBlacklistService: TokenBlacklistService,
   ) {}
 
+  async getServerTime(): Promise<ApiResponse<{ timestamp: number }>> {
+    return new ApiResponse(
+      Status.Success,
+      HttpStatus.OK,
+      'La hora del servidor se recuperó correctamente.',
+      { timestamp: Math.floor(Date.now() / 1000) },
+    );
+  }
+
   async login(dto: {
     identifier: string;
+    collaborator: string | null;
     expoID: string | null;
   }): Promise<ApiResponse<{ access_token: string }>> {
     const user = await this.authRepository.validate(dto);
-    const payload = { identifier: user.identifier, id: user.id };
+    const payload = {
+      id: user.id,
+      identifier: user.identifier,
+      collaborator: dto.collaborator,
+    };
     return new ApiResponse(
       Status.Success,
       HttpStatus.CREATED,

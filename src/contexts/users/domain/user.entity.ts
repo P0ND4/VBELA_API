@@ -11,7 +11,10 @@ import {
   PaymentMethods,
   InvoiceInformation,
   Kitchen,
+  Collaborator,
+  Handler,
 } from './types';
+import { Group } from './types/common/group.entity';
 
 export interface PrimitiveUser {
   id: string;
@@ -27,13 +30,17 @@ export interface PrimitiveUser {
   recipes: Recipe[];
   stores: Location[];
   restaurants: Location[];
+  productGroup: Group[];
   products: Element[];
   sales: Order[];
   kitchens: Kitchen[];
+  menuGroup: Group[];
   menu: Element[];
   orders: Order[];
   tables: Table[];
   paymentMethods: PaymentMethods[];
+  collaborators: Collaborator[];
+  handlers: Handler[];
 }
 
 export class UserEntity {
@@ -62,13 +69,17 @@ export class UserEntity {
       recipes: createUser.recipes || [],
       stores: createUser.stores || [],
       restaurants: createUser.restaurants || [],
+      productGroup: createUser.productGroup || [],
       products: createUser.products || [],
       sales: createUser.sales || [],
       kitchens: createUser.kitchens || [],
+      menuGroup: createUser.menuGroup || [],
       menu: createUser.menu || [],
       orders: createUser.orders || [],
       tables: createUser.tables || [],
       paymentMethods: createUser.paymentMethods || [],
+      collaborators: createUser.collaborators || [],
+      handlers: createUser.handlers || [],
     });
   }
 

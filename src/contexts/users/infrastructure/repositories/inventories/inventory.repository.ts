@@ -41,12 +41,13 @@ export class InventoryRepository extends InventoryRepositoryEntity {
 
   async edit(
     identifier: string,
+    id: string,
     inventory: Inventory,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'inventories.id': inventory.id },
+          { identifier, 'inventories.id': id },
           { $set: { 'inventories.$': inventory } },
           { new: true },
         )

@@ -11,8 +11,8 @@ export class HandlerUseCase {
     return await this.handlerRepository.add(identifier, handler);
   }
 
-  async edit(identifier: string, handler: Handler): Promise<ApiResponse<null>> {
-    return await this.handlerRepository.edit(identifier, handler);
+  async edit(identifier: string, id: string, handler: Handler): Promise<ApiResponse<null>> {
+    return await this.handlerRepository.edit(identifier, id, handler);
   }
 
   async remove(

@@ -11,8 +11,8 @@ export class MenuUseCase {
     return await this.menuRepository.add(identifier, menu);
   }
 
-  async edit(identifier: string, menu: Element): Promise<ApiResponse<null>> {
-    return await this.menuRepository.edit(identifier, menu);
+  async edit(identifier: string, id: string, menu: Element): Promise<ApiResponse<null>> {
+    return await this.menuRepository.edit(identifier, id, menu);
   }
 
   async remove(identifier: string, menuID: string): Promise<ApiResponse<null>> {

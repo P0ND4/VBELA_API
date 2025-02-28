@@ -11,8 +11,8 @@ export class SaleUseCase {
     return await this.saleRepository.add(identifier, dto);
   }
 
-  async edit(identifier: string, dto: OrderDTO): Promise<ApiResponse<null>> {
-    return await this.saleRepository.edit(identifier, dto);
+  async edit(identifier: string, id: string, dto: OrderDTO): Promise<ApiResponse<null>> {
+    return await this.saleRepository.edit(identifier, id, dto);
   }
 
   async remove(identifier: string, saleID: string): Promise<ApiResponse<null>> {
