@@ -13,8 +13,10 @@ import {
   Kitchen,
   Collaborator,
   Handler,
+  Supplier,
+  Economy,
+  Group,
 } from './types';
-import { Group } from './types/common/group.entity';
 
 export interface PrimitiveUser {
   id: string;
@@ -23,7 +25,6 @@ export interface PrimitiveUser {
   expoID: string | null;
   darkMode: boolean;
   invoiceInformation: InvoiceInformation;
-  coin: string;
   color: number;
   stocks: Stock[];
   inventories: Inventory[];
@@ -41,6 +42,8 @@ export interface PrimitiveUser {
   paymentMethods: PaymentMethods[];
   collaborators: Collaborator[];
   handlers: Handler[];
+  suppliers: Supplier[];
+  economies: Economy[];
 }
 
 export class UserEntity {
@@ -62,7 +65,6 @@ export class UserEntity {
         phoneNumber: '',
         complement: '',
       },
-      coin: createUser.coin || 'USD',
       color: createUser.color || 0,
       stocks: createUser.stocks || [],
       inventories: createUser.inventories || [],
@@ -80,6 +82,8 @@ export class UserEntity {
       paymentMethods: createUser.paymentMethods || [],
       collaborators: createUser.collaborators || [],
       handlers: createUser.handlers || [],
+      suppliers: createUser.suppliers || [],
+      economies: createUser.economies || [],
     });
   }
 

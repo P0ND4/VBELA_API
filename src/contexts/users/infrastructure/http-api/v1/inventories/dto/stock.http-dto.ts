@@ -4,10 +4,22 @@ import {
   IsBoolean,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsOptional,
   IsString,
+  ValidateIf,
   ValidateNested,
 } from 'class-validator';
+
+export class SupplierDto {
+  @IsString()
+  @IsNotEmpty()
+  id: string;
+
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+}
 
 export class Movement {
   @IsString()
@@ -22,9 +34,15 @@ export class Movement {
   @IsNotEmpty()
   stockID: string;
 
-  @IsString()
+  @ValidateIf((o) => o.supplier !== null)
+  @IsObject()
+  @ValidateNested()
+  @Type(() => SupplierDto)
   @IsOptional()
-  supplierID?: string;
+  supplier: SupplierDto | null;
+
+  @IsNumber()
+  supplierValue: number;
 
   @IsString()
   @IsNotEmpty()
@@ -80,6 +98,9 @@ export class StockHttpDto {
 
   @IsNumber()
   currentValue: number;
+
+  @IsNumber()
+  quantity: number;
 
   @IsArray()
   @ValidateNested({ each: true })

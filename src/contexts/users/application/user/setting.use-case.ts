@@ -27,10 +27,6 @@ export class SettingUseCase {
     );
   }
 
-  async coin(identifier: string, coin: string): Promise<ApiResponse<null>> {
-    return await this.settingRepository.coin(identifier, coin);
-  }
-
   async color(identifier: string, color: number): Promise<ApiResponse<null>> {
     return await this.settingRepository.color(identifier, color);
   }

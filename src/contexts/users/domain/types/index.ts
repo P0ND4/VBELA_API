@@ -5,3 +5,4 @@ export * from './restaurants';
 export * from './settings';
 export * from './handlers';
 export * from './collaborators';
+export * from './suppliers';

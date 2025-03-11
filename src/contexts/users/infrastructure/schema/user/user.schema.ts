@@ -12,14 +12,15 @@ import {
   Recipe,
   Stock,
   Table,
-  Handler
+  Handler,
+  Supplier,
+  Group,
+  Economy,
 } from 'src/contexts/users/domain/types';
-import { Group } from 'src/contexts/users/domain/types/common/group.entity';
 
 export type UserDocument = HydratedDocument<User>;
 
 const DEFAULT_NAME = 'VBELA';
-const DEFAULT_COIN = 'USD';
 
 @Schema()
 export class User extends Document {
@@ -48,9 +49,6 @@ export class User extends Document {
     },
   })
   invoiceInformation: InvoiceInformation;
-
-  @Prop({ default: DEFAULT_COIN })
-  coin: string;
 
   @Prop({ default: 0 })
   color: number;
@@ -102,6 +100,12 @@ export class User extends Document {
 
   @Prop({ type: [Object], default: [] })
   collaborators: Collaborator[];
+
+  @Prop({ type: [Object], default: [] })
+  suppliers: Supplier[];
+
+  @Prop({ type: [Object], default: [] })
+  economies: Economy[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

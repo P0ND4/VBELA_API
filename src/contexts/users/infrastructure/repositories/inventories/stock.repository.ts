@@ -36,7 +36,11 @@ export class StockRepository extends StockRepositoryEntity {
     }
   }
 
-  async edit(identifier: string, id: string, stock: Stock): Promise<ApiResponse<null>> {
+  async edit(
+    identifier: string,
+    id: string,
+    stock: Stock,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
@@ -120,9 +124,13 @@ export class StockRepository extends StockRepositoryEntity {
     movement: Movement,
     updater: (stock: Stock, movement: Movement) => Stock,
   ) {
-    user.stocks = user.stocks.map(stock => {
+    user.stocks = user.stocks.map((stock) => {
       return stock.id === movement.stockID ? updater(stock, movement) : stock;
     });
+  }
+
+  private calculateQuantity(movements: Movement[]) {
+    return movements.reduce((acc, m) => acc + m.quantity, 0);
   }
 
   async addMovement(
@@ -140,11 +148,15 @@ export class StockRepository extends StockRepositoryEntity {
         );
       }
 
-      this.updateStockMovement(user, movement, (stock, movement) => ({
-        ...stock,
-        currentValue: movement.currentValue,
-        movements: [...stock.movements, movement],
-      }));
+      this.updateStockMovement(user, movement, (stock, movement) => {
+        const movements = [...stock.movements, movement];
+        return {
+          ...stock,
+          quantity: this.calculateQuantity(movements),
+          currentValue: movement.currentValue,
+          movements,
+        };
+      });
 
       await user.save();
       return new ApiResponse(
@@ -176,10 +188,16 @@ export class StockRepository extends StockRepositoryEntity {
         );
       }
 
-      this.updateStockMovement(user, movement, (stock, movement) => ({
-        ...stock,
-        movements: stock.movements.map(m => (m.id === movement.id ? movement : m)),
-      }));
+      this.updateStockMovement(user, movement, (stock, movement) => {
+        const movements = stock.movements.map((m) =>
+          m.id === movement.id ? movement : m,
+        );
+        return {
+          ...stock,
+          quantity: this.calculateQuantity(movements),
+          movements,
+        };
+      });
 
       await user.save();
       return new ApiResponse(
@@ -211,10 +229,14 @@ export class StockRepository extends StockRepositoryEntity {
         );
       }
 
-      user.stocks = user.stocks.map(stock => ({
-        ...stock,
-        movements: stock.movements.filter(m => m.id !== movementID),
-      }));
+      user.stocks = user.stocks.map((stock) => {
+        const movements = stock.movements.filter((m) => m.id !== movementID);
+        return {
+          ...stock,
+          quantity: this.calculateQuantity(movements),
+          movements,
+        };
+      });
 
       await user.save();
       return new ApiResponse(

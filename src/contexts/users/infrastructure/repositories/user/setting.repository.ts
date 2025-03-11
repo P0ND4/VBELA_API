@@ -63,26 +63,6 @@ export class SettingRepository extends SettingRepositoryEntity {
     }
   }
 
-  async coin(identifier: string, coin: string): Promise<ApiResponse<null>> {
-    try {
-      const user = await this.userModel
-        .findOneAndUpdate({ identifier }, { coin }, { new: true })
-        .exec();
-
-      return new ApiResponse(
-        user ? Status.Success : Status.Error,
-        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Moneda actualizada exitosamente' : 'Usuario no encontrado',
-        null,
-      );
-    } catch (error) {
-      throw new HttpException(
-        error.message || 'Error interno del servidor',
-        HttpStatus.INTERNAL_SERVER_ERROR,
-      );
-    }
-  }
-
   async color(identifier: string, color: number): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel

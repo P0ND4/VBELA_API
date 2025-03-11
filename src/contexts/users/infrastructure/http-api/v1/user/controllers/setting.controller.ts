@@ -13,7 +13,6 @@ import { V1_USER } from '../../../route.constants';
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-case';
 import {
-  CoinHttpDto,
   ColorHttpDto,
   DarkModeHttpDto,
   InvoiceInformationHttpDto,
@@ -35,14 +34,6 @@ export class SettingController {
       req.user.identifier,
       darkModeHttpDto.darkMode,
     );
-  }
-
-  @Patch('coin')
-  async coin(
-    @Request() req,
-    @Body() coinHttpDto: CoinHttpDto,
-  ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.coin(req.user.identifier, coinHttpDto.coin);
   }
 
   @Patch('color')
@@ -75,7 +66,7 @@ export class SettingController {
     );
   }
 
-  @Put('payment-methods')
+  @Put('payment-methods/:id')
   async editPaymentMethods(
     @Request() req,
     @Param('id') id: string,

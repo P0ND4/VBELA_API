@@ -6,6 +6,7 @@ import { InventoryModule } from './http-api/v1/inventories/inventory.module';
 import { RestaurantModule } from './http-api/v1/restaurants/restaurant.module';
 import { StoreModule } from './http-api/v1/stores/store.module';
 import { HandlerModule } from './http-api/v1/handlers/handler.module';
+import { SupplierModule } from './http-api/v1/suppliers/supplier.module';
 
 @Module({
   imports: [
@@ -15,7 +16,8 @@ import { HandlerModule } from './http-api/v1/handlers/handler.module';
     InventoryModule,
     RestaurantModule,
     StoreModule,
-    HandlerModule
+    HandlerModule,
+    SupplierModule,
   ],
 })
 export class MainModule {}

@@ -35,11 +35,6 @@ export class ColorHttpDto {
   color: number;
 }
 
-export class CoinHttpDto {
-  @IsString()
-  coin: string;
-}
-
 export class InvoiceInformationHttpDto {
   @IsString()
   company: string;

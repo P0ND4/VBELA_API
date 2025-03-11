@@ -19,6 +19,30 @@ import { Movement, StockHttpDto } from '../dto/stock.http-dto';
 export class StockController {
   constructor(private readonly stockUseCase: StockUseCase) {}
 
+  @Post('movement')
+  async addMovement(
+    @Req() req,
+    @Body() movement: Movement,
+  ): Promise<ApiResponse<null>> {
+    return this.stockUseCase.addMovement(req.user.identifier, movement);
+  }
+
+  @Put('movement')
+  async editMovement(
+    @Req() req,
+    @Body() movement: Movement,
+  ): Promise<ApiResponse<null>> {
+    return this.stockUseCase.editMovement(req.user.identifier, movement);
+  }
+
+  @Delete('movement/:id')
+  async removeMovement(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<ApiResponse<null>> {
+    return this.stockUseCase.removeMovement(req.user.identifier, id);
+  }
+
   @Post('')
   async add(
     @Req() req,
@@ -42,29 +66,5 @@ export class StockController {
     @Req() req,
   ): Promise<ApiResponse<null>> {
     return this.stockUseCase.remove(req.user.identifier, id);
-  }
-
-  @Post('movement')
-  async addMovement(
-    @Req() req,
-    @Body() movement: Movement,
-  ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.addMovement(req.user.identifier, movement);
-  }
-
-  @Put('movement')
-  async editMovement(
-    @Req() req,
-    @Body() movement: Movement,
-  ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.editMovement(req.user.identifier, movement);
-  }
-
-  @Delete('movement/:id')
-  async removeMovement(
-    @Param('id') id: string,
-    @Req() req,
-  ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.removeMovement(req.user.identifier, id);
   }
 }
