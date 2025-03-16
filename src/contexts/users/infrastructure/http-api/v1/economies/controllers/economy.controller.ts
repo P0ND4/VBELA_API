@@ -11,8 +11,8 @@ import {
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
-import { EconomyUseCase } from 'src/contexts/users/application/suppliers/economy.use-case';
 import { EconomyHttpDto } from '../dto/economy.http-dto';
+import { EconomyUseCase } from 'src/contexts/users/application/economies/economy.use-case';
 
 @Controller(`${V1_USER}/economy`)
 @UseGuards(JwtAuthGuard)

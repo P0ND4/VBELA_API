@@ -7,6 +7,7 @@ import { RestaurantModule } from './http-api/v1/restaurants/restaurant.module';
 import { StoreModule } from './http-api/v1/stores/store.module';
 import { HandlerModule } from './http-api/v1/handlers/handler.module';
 import { SupplierModule } from './http-api/v1/suppliers/supplier.module';
+import { EconomyModule } from './http-api/v1/economies/economy.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { SupplierModule } from './http-api/v1/suppliers/supplier.module';
     StoreModule,
     HandlerModule,
     SupplierModule,
+    EconomyModule,
   ],
 })
 export class MainModule {}

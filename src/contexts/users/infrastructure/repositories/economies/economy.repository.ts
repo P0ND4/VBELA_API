@@ -4,7 +4,7 @@ import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Economy } from '../../../domain/types';
 import { ApiResponse, Status } from '../../../../shared/api.response';
-import { EconomyRepositoryEntity } from 'src/contexts/users/domain/repositories/suppliers/economy.respository.entity';
+import { EconomyRepositoryEntity } from 'src/contexts/users/domain/repositories/economies/economy.respository.entity';
 
 @Injectable()
 export class EconomyRepository extends EconomyRepositoryEntity {

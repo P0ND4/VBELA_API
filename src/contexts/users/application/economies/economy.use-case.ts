@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { Economy } from '../../domain/types';
-import { EconomyRepositoryEntity } from '../../domain/repositories/suppliers/economy.respository.entity';
+import { EconomyRepositoryEntity } from '../../domain/repositories/economies/economy.respository.entity';
 
 @Injectable()
 export class EconomyUseCase {
