@@ -9,7 +9,7 @@ import {
   ValidateNested,
 } from 'class-validator';
 
-export class SupplierDto {
+export class DetailsDto {
   @IsString()
   @IsNotEmpty()
   id: string;
@@ -27,17 +27,18 @@ export class EconomyHttpDto {
   @ValidateIf((o) => o.supplier !== null)
   @IsObject()
   @ValidateNested()
-  @Type(() => SupplierDto)
+  @Type(() => DetailsDto)
   @IsOptional()
-  supplier: SupplierDto | null;
+  supplier: DetailsDto | null;
 
   @IsString()
   @IsNotEmpty()
   type: string;
 
-  @IsString()
-  @IsNotEmpty()
-  name: string;
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DetailsDto)
+  category: DetailsDto;
 
   @IsNumber()
   value: number;

@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SettingRepositoryEntity } from 'src/contexts/users/domain/repositories/user/setting.repository.entity';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import {
+  EconomicGroup,
   InvoiceInformation,
   PaymentMethods,
 } from 'src/contexts/users/domain/types';
@@ -60,6 +61,38 @@ export class SettingUseCase {
     return await this.settingRepository.removePaymentMethods(
       identifier,
       paymentMethodsId,
+    );
+  }
+
+  async addEconomicGroup(
+    identifier: string,
+    economicGroup: EconomicGroup,
+  ): Promise<ApiResponse<null>> {
+    return await this.settingRepository.addEconomicGroup(
+      identifier,
+      economicGroup,
+    );
+  }
+
+  async editEconomicGroup(
+    identifier: string,
+    id: string,
+    economicGroup: EconomicGroup,
+  ): Promise<ApiResponse<null>> {
+    return await this.settingRepository.editEconomicGroup(
+      identifier,
+      id,
+      economicGroup,
+    );
+  }
+
+  async removeEconomicGroup(
+    identifier: string,
+    economicGroupId: string,
+  ): Promise<ApiResponse<null>> {
+    return await this.settingRepository.removeEconomicGroup(
+      identifier,
+      economicGroupId,
     );
   }
 }

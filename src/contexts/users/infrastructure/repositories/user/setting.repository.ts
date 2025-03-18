@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { SettingRepositoryEntity } from 'src/contexts/users/domain/repositories/user/setting.repository.entity';
 import { ApiResponse, Status } from 'src/contexts/shared/api.response';
 import {
+  EconomicGroup,
   InvoiceInformation,
   PaymentMethods,
 } from 'src/contexts/users/domain/types';
@@ -159,6 +160,94 @@ export class SettingRepository extends SettingRepositoryEntity {
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
         user ? 'Método de pago removido exitosamente' : 'Usuario no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async addEconomicGroup(
+    identifier: string,
+    economicGroup: EconomicGroup,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate(
+          { identifier },
+          { $push: { economicGroup } },
+          { new: true },
+        )
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user
+          ? 'Categoría de ingreso/egreso actualizados exitosamente'
+          : 'Usuario no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async editEconomicGroup(
+    identifier: string,
+    id: string,
+    economicGroup: EconomicGroup,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate(
+          { identifier, 'economicGroup.id': id },
+          { $set: { 'economicGroup.$': economicGroup } },
+          { new: true },
+        )
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Categoría de ingreso/egreso editado exitosamente'
+          : 'Usuario o categoría de ingreso/egreso no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async removeEconomicGroup(
+    identifier: string,
+    economicGroupID: string,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate(
+          { identifier },
+          { $pull: { economicGroup: { id: economicGroupID } } },
+          { new: true },
+        )
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Categoría de ingreso/egreso removido exitosamente'
+          : 'Usuario no encontrado',
         null,
       );
     } catch (error) {

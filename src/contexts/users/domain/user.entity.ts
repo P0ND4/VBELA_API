@@ -16,6 +16,7 @@ import {
   Supplier,
   Economy,
   Group,
+  EconomicGroup,
 } from './types';
 
 export interface PrimitiveUser {
@@ -44,6 +45,7 @@ export interface PrimitiveUser {
   handlers: Handler[];
   suppliers: Supplier[];
   economies: Economy[];
+  economicGroup: EconomicGroup[];
 }
 
 export class UserEntity {
@@ -84,6 +86,7 @@ export class UserEntity {
       handlers: createUser.handlers || [],
       suppliers: createUser.suppliers || [],
       economies: createUser.economies || [],
+      economicGroup: createUser.economicGroup || [],
     });
   }
 

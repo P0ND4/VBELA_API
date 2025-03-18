@@ -16,6 +16,7 @@ import {
   Supplier,
   Group,
   Economy,
+  EconomicGroup,
 } from 'src/contexts/users/domain/types';
 
 export type UserDocument = HydratedDocument<User>;
@@ -106,6 +107,9 @@ export class User extends Document {
 
   @Prop({ type: [Object], default: [] })
   economies: Economy[];
+
+  @Prop({ type: [Object], default: [] })
+  economicGroup: EconomicGroup[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

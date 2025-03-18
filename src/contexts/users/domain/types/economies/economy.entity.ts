@@ -1,13 +1,13 @@
-type SupplierType = {
+type DetailsType = {
   id: string;
   name: string;
 };
 
 export interface Economy {
   id: string;
-  supplier: SupplierType;
+  supplier: DetailsType | null;
   type: string;
-  name: string;
+  category: DetailsType;
   value: number;
   quantity: number;
   unit: string;
