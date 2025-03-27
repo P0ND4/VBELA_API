@@ -2,22 +2,22 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
-import { Movement, Stock } from '../../../domain/types';
 import { ApiResponse, Status } from '../../../../shared/api.response';
-import { StockRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.repository.entity';
+import { StockGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.group.repository.entity';
+import { Group } from 'src/contexts/users/domain/types/common/group.entity';
 
 @Injectable()
-export class StockRepository extends StockRepositoryEntity {
+export class StockGroupRepository extends StockGroupRepositoryEntity {
   constructor(@InjectModel(User.name) public userModel: Model<User>) {
     super();
   }
 
-  async add(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
+  async add(identifier: string, group: Group): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $push: { stocks: stock } },
+          { $push: { stockGroup: group } },
           { new: true },
         )
         .exec();
@@ -25,7 +25,9 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
-        user ? 'Stock agregado exitosamente.' : 'Usuario no encontrado.',
+        user
+          ? 'Grupo de stocks creado exitosamente.'
+          : 'Usuario no encontrado.',
         null,
       );
     } catch (error) {
@@ -39,21 +41,32 @@ export class StockRepository extends StockRepositoryEntity {
   async edit(
     identifier: string,
     id: string,
-    stock: Stock,
+    group: Group,
   ): Promise<ApiResponse<null>> {
     try {
-      const user = await this.userModel
-        .findOneAndUpdate(
-          { identifier, 'stocks.id': id },
-          { $set: { 'stocks.$': stock } },
-          { new: true },
-        )
-        .exec();
+      const user = await this.userModel.findOne({ identifier }).exec();
+
+      // Edit product group
+      user.stockGroup = user.stockGroup.map((g) => (g.id === id ? group : g));
+
+      // Update subcategories and category
+      user.stocks = user.stocks.map((stock) => ({
+        ...stock,
+        subcategories: stock.subcategories.filter(
+          (sub) =>
+            sub.category !== group.id ||
+            group.subcategories.some((s) => s.id === sub.subcategory),
+        ),
+      }));
+
+      await user.save();
 
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Stock editado exitosamente.' : 'Usuario o stock no encontrado.',
+        user
+          ? 'Grupo de stocks actualizado exitosamente.'
+          : 'Usuario o grupo no encontrado.',
         null,
       );
     } catch (error) {
@@ -66,7 +79,7 @@ export class StockRepository extends StockRepositoryEntity {
 
   async remove(
     identifier: string,
-    stockID: string,
+    groupID: string,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel.findOne({ identifier }).exec();
@@ -80,26 +93,15 @@ export class StockRepository extends StockRepositoryEntity {
         );
       }
 
-      // Remove stock
-      user.stocks = user.stocks.filter((stock) => stock.id !== stockID);
+      // Remove product group
+      user.stockGroup = user.stockGroup.filter((group) => group.id !== groupID);
 
-      // Remove stock from products
-      user.products = user.products.map((product) => ({
-        ...product,
-        stockIDS: product.stockIDS?.filter((id) => id !== stockID),
-      }));
-
-      // Remove stock from menu
-      user.menu = user.menu.map((menuItem) => ({
-        ...menuItem,
-        stockIDS: menuItem.stockIDS?.filter((id) => id !== stockID),
-      }));
-
-      // Remove stock from recipes
-      user.recipes = user.recipes.map((recipe) => ({
-        ...recipe,
-        ingredients: recipe.ingredients.filter(
-          (ingredient) => ingredient.id !== stockID,
+      // Remove subcategories and category
+      user.stocks = user.stocks.map((stock) => ({
+        ...stock,
+        categories: stock.categories.filter((c) => c !== groupID),
+        subcategories: stock.subcategories.filter(
+          (s) => s.category !== groupID,
         ),
       }));
 
@@ -108,7 +110,7 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         Status.Success,
         HttpStatus.OK,
-        'Stock y referencias eliminadas exitosamente.',
+        'Grupo y referencias eliminadas exitosamente.',
         null,
       );
     } catch (error) {

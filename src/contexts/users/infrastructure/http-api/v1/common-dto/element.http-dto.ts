@@ -17,6 +17,7 @@ export class SubCategory {
   @IsNotEmpty()
   subcategory: string;
 }
+
 export class ElementHttpDto {
   @IsString()
   @IsNotEmpty()

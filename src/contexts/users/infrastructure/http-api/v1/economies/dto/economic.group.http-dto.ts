@@ -1,30 +1,11 @@
+import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested } from 'class-validator';
+import { SubCategory } from '../../common-dto/group.http-dto';
 import { Type } from 'class-transformer';
-import {
-  IsArray,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
-  ValidateNested,
-} from 'class-validator';
 
-export class SubCategory {
+export class EconomicGroupHttpDto {
   @IsString()
   @IsNotEmpty()
   id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  name: string;
-}
-
-export class GroupHttpDTO {
-  @IsString()
-  @IsNotEmpty()
-  id: string;
-
-  @IsString()
-  @IsNotEmpty()
-  ownerID: string;
 
   @IsString()
   @IsNotEmpty()
@@ -34,6 +15,10 @@ export class GroupHttpDTO {
   @ValidateNested({ each: true })
   @Type(() => SubCategory)
   subcategories: SubCategory[];
+
+  @IsString()
+  @IsNotEmpty()
+  visible: string;
 
   @IsNumber()
   creationDate: number;

@@ -15,7 +15,6 @@ import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-
 import {
   ColorHttpDto,
   DarkModeHttpDto,
-  EconomicGroupHttpDto,
   InvoiceInformationHttpDto,
   PaymentMethodsHttpDto,
 } from '../dto/setting.http-dto';
@@ -86,37 +85,5 @@ export class SettingController {
     @Request() req,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.removePaymentMethods(req.user.identifier, id);
-  }
-
-  @Post('economic-group')
-  async addEconomicGroup(
-    @Request() req,
-    @Body() economicGroup: EconomicGroupHttpDto,
-  ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.addEconomicGroup(
-      req.user.identifier,
-      economicGroup,
-    );
-  }
-
-  @Put('economic-group/:id')
-  async editEconomicGroup(
-    @Request() req,
-    @Param('id') id: string,
-    @Body() economicGroup: EconomicGroupHttpDto,
-  ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.editEconomicGroup(
-      req.user.identifier,
-      id,
-      economicGroup,
-    );
-  }
-
-  @Delete('economic-group/:id')
-  async removeEconomicGroup(
-    @Param('id') id: string,
-    @Request() req,
-  ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.removeEconomicGroup(req.user.identifier, id);
   }
 }

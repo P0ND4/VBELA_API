@@ -17,6 +17,7 @@ import {
   Economy,
   Group,
   EconomicGroup,
+  Movement,
 } from './types';
 
 export interface PrimitiveUser {
@@ -28,8 +29,10 @@ export interface PrimitiveUser {
   invoiceInformation: InvoiceInformation;
   color: number;
   stocks: Stock[];
+  stockGroup: Group[];
   inventories: Inventory[];
   recipes: Recipe[];
+  recipeGroup: Group[];
   stores: Location[];
   restaurants: Location[];
   productGroup: Group[];
@@ -46,6 +49,7 @@ export interface PrimitiveUser {
   suppliers: Supplier[];
   economies: Economy[];
   economicGroup: EconomicGroup[];
+  movements: Movement[];
 }
 
 export class UserEntity {
@@ -69,8 +73,10 @@ export class UserEntity {
       },
       color: createUser.color || 0,
       stocks: createUser.stocks || [],
+      stockGroup: createUser.stockGroup || [],
       inventories: createUser.inventories || [],
       recipes: createUser.recipes || [],
+      recipeGroup: createUser.recipeGroup || [],
       stores: createUser.stores || [],
       restaurants: createUser.restaurants || [],
       productGroup: createUser.productGroup || [],
@@ -87,6 +93,7 @@ export class UserEntity {
       suppliers: createUser.suppliers || [],
       economies: createUser.economies || [],
       economicGroup: createUser.economicGroup || [],
+      movements: createUser.movements || [],
     });
   }
 

@@ -1,15 +1,6 @@
-export type Movement = {
-  id: string;
-  inventoryID: string;
-  stockID: string;
-  supplierID?: string;
-  type: string;
-  quantity: number;
-  currentValue: number;
-  date: number;
-  paymentMethod?: string;
-  creationDate: number;
-  modificationDate: number;
+type SubCategory = {
+  category: string;
+  subcategory: string;
 };
 
 export interface Stock {
@@ -17,13 +8,13 @@ export interface Stock {
   inventoryID: string;
   name: string;
   unit: string;
+  categories: string[];
+  subcategories: SubCategory[];
   visible: boolean;
   reorder: number;
   reference: string;
   brand: string;
   currentValue: number;
-  quantity: number;
-  movements: Movement[];
   creationDate: number;
   modificationDate: number;
 }

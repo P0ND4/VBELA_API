@@ -82,7 +82,7 @@ export class RestaurantRepository extends RestaurantRepositoryEntity {
               restaurants: { id: restaurantID },
               menu: { locationID: restaurantID },
               tables: { restaurantID },
-              menuGroup: { locationID: restaurantID },
+              menuGroup: { ownerID: restaurantID },
             },
           },
           { new: true },

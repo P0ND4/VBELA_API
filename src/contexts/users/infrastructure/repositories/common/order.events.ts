@@ -10,12 +10,12 @@ export class OrderEvents {
     @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
-  async events(dto: OrderDTO): Promise<void> {
+  async events(identifier: string, dto: OrderDTO): Promise<void> {
     if (!!dto.movements.length) {
       const movementUpdates = dto.movements.map((movement) => ({
         updateOne: {
-          filter: { 'stocks.id': movement.stockID },
-          update: { $push: { 'stocks.$.movements': movement } },
+          filter: { identifier },
+          update: { $push: { movements: movement } },
         },
       }));
 

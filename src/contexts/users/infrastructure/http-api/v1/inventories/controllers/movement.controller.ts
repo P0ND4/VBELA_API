@@ -11,29 +11,29 @@ import {
 import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
-import { StockUseCase } from 'src/contexts/users/application/inventories/stock.use-case';
-import { StockHttpDto } from '../dto/stock.http-dto';
+import { MovementUseCase } from 'src/contexts/users/application/inventories/movement.use-case';
+import { MovementHttpDto } from '../dto/movement.http-dto';
 
-@Controller(`${V1_USER}/stock`)
+@Controller(`${V1_USER}/movement`)
 @UseGuards(JwtAuthGuard)
-export class StockController {
-  constructor(private readonly stockUseCase: StockUseCase) {}
+export class MovementController {
+  constructor(private readonly movementUseCase: MovementUseCase) {}
 
   @Post('')
   async add(
     @Req() req,
-    @Body() stockHttpDto: StockHttpDto,
+    @Body() movementHttpDto: MovementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.add(req.user.identifier, stockHttpDto);
+    return this.movementUseCase.add(req.user.identifier, movementHttpDto);
   }
 
   @Put(':id')
   async edit(
     @Req() req,
     @Param('id') id: string,
-    @Body() stockHttpDto: StockHttpDto,
+    @Body() movementHttpDto: MovementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.edit(req.user.identifier, id, stockHttpDto);
+    return this.movementUseCase.edit(req.user.identifier, id, movementHttpDto);
   }
 
   @Delete(':id')
@@ -41,6 +41,6 @@ export class StockController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.remove(req.user.identifier, id);
+    return this.movementUseCase.remove(req.user.identifier, id);
   }
 }

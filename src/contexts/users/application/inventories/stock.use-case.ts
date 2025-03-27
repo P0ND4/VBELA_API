@@ -19,16 +19,4 @@ export class StockUseCase {
   async remove(identifier: string, stockID: string): Promise<ApiResponse<null>> {
     return await this.stockRepository.remove(identifier, stockID);
   }
-  
-  async addMovement(identifier: string, movement: Movement): Promise<ApiResponse<null>> {
-    return await this.stockRepository.addMovement(identifier, movement);
-  }
-
-  async editMovement(identifier: string, movement: Movement): Promise<ApiResponse<null>> {
-    return await this.stockRepository.editMovement(identifier, movement);
-  }
-
-  async removeMovement(identifier: string, movementID: string): Promise<ApiResponse<null>> {
-    return await this.stockRepository.removeMovement(identifier, movementID);
-  }
 }

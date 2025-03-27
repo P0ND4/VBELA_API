@@ -63,36 +63,4 @@ export class SettingUseCase {
       paymentMethodsId,
     );
   }
-
-  async addEconomicGroup(
-    identifier: string,
-    economicGroup: EconomicGroup,
-  ): Promise<ApiResponse<null>> {
-    return await this.settingRepository.addEconomicGroup(
-      identifier,
-      economicGroup,
-    );
-  }
-
-  async editEconomicGroup(
-    identifier: string,
-    id: string,
-    economicGroup: EconomicGroup,
-  ): Promise<ApiResponse<null>> {
-    return await this.settingRepository.editEconomicGroup(
-      identifier,
-      id,
-      economicGroup,
-    );
-  }
-
-  async removeEconomicGroup(
-    identifier: string,
-    economicGroupId: string,
-  ): Promise<ApiResponse<null>> {
-    return await this.settingRepository.removeEconomicGroup(
-      identifier,
-      economicGroupId,
-    );
-  }
 }

@@ -3,19 +3,17 @@ type DetailsType = {
   name: string;
 };
 
-export interface Economy {
+export type Movement = {
   id: string;
+  inventory: DetailsType;
+  stock: DetailsType & { unit?: string; currentValue: number };
   supplier: DetailsType | null;
+  supplierValue: number;
   type: string;
-  category: DetailsType;
-  subcategory: DetailsType | null;
-  value: number;
   quantity: number;
-  unit: string;
-  description: string;
+  currentValue: number;
   date: number;
-  reference: string;
-  brand: string;
+  paymentMethod?: string;
   creationDate: number;
   modificationDate: number;
-}
+};

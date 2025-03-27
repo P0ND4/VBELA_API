@@ -19,10 +19,29 @@ export class DetailsDto {
   name: string;
 }
 
-export class EconomyHttpDto {
+export class StockDetailsDto extends DetailsDto {
+  @IsString()
+  @IsOptional()
+  unit?: string;
+
+  @IsNumber()
+  currentValue: number;
+}
+
+export class MovementHttpDto {
   @IsString()
   @IsNotEmpty()
   id: string;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => DetailsDto)
+  inventory: DetailsDto;
+
+  @IsObject()
+  @ValidateNested()
+  @Type(() => StockDetailsDto)
+  stock: StockDetailsDto;
 
   @ValidateIf((o) => o.supplier !== null)
   @IsObject()
@@ -31,41 +50,25 @@ export class EconomyHttpDto {
   @IsOptional()
   supplier: DetailsDto | null;
 
+  @IsNumber()
+  supplierValue: number;
+
   @IsString()
   @IsNotEmpty()
   type: string;
 
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DetailsDto)
-  category: DetailsDto;
-
-  @ValidateIf((o) => o.subcategory !== null)
-  @IsObject()
-  @ValidateNested()
-  @Type(() => DetailsDto)
-  subcategory: DetailsDto | null;
-
-  @IsNumber()
-  value: number;
-
   @IsNumber()
   quantity: number;
 
-  @IsString()
-  unit: string;
-
-  @IsString()
-  description: string;
+  @IsNumber()
+  currentValue: number;
 
   @IsNumber()
   date: number;
 
   @IsString()
-  reference: string;
-
-  @IsString()
-  brand: string;
+  @IsOptional()
+  paymentMethod?: string;
 
   @IsNumber()
   creationDate: number;

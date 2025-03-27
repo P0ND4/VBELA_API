@@ -2,22 +2,25 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
-import { Location } from '../../../domain/types';
+import { EconomicGroup } from '../../../domain/types';
 import { ApiResponse, Status } from '../../../../shared/api.response';
-import { StoreRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/store.repository.entity';
+import { EconomicGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/economies/economic.group.repository.entity';
 
 @Injectable()
-export class StoreRepository extends StoreRepositoryEntity {
+export class EconomicGroupRepository extends EconomicGroupRepositoryEntity {
   constructor(@InjectModel(User.name) public userModel: Model<User>) {
     super();
   }
 
-  async add(identifier: string, store: Location): Promise<ApiResponse<null>> {
+  async add(
+    identifier: string,
+    economicGroup: EconomicGroup,
+  ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $push: { stores: store } },
+          { $push: { economicGroup } },
           { new: true },
         )
         .exec();
@@ -25,7 +28,9 @@ export class StoreRepository extends StoreRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
-        user ? 'Tienda agregada exitosamente.' : 'Usuario no encontrado.',
+        user
+          ? 'Categoría de ingreso/egreso actualizados exitosamente'
+          : 'Usuario no encontrado',
         null,
       );
     } catch (error) {
@@ -39,13 +44,13 @@ export class StoreRepository extends StoreRepositoryEntity {
   async edit(
     identifier: string,
     id: string,
-    store: Location,
+    economicGroup: EconomicGroup,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'stores.id': id },
-          { $set: { 'stores.$': store } },
+          { identifier, 'economicGroup.id': id },
+          { $set: { 'economicGroup.$': economicGroup } },
           { new: true },
         )
         .exec();
@@ -54,8 +59,8 @@ export class StoreRepository extends StoreRepositoryEntity {
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
         user
-          ? 'Tienda editada exitosamente.'
-          : 'Usuario o tienda no encontrada.',
+          ? 'Categoría de ingreso/egreso editado exitosamente'
+          : 'Usuario o categoría de ingreso/egreso no encontrado',
         null,
       );
     } catch (error) {
@@ -68,19 +73,13 @@ export class StoreRepository extends StoreRepositoryEntity {
 
   async remove(
     identifier: string,
-    storeID: string,
+    economicGroupID: string,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          {
-            $pull: {
-              stores: { id: storeID },
-              products: { locationID: storeID },
-              productGroup: { ownerID: storeID },
-            },
-          },
+          { $pull: { economicGroup: { id: economicGroupID } } },
           { new: true },
         )
         .exec();
@@ -89,8 +88,8 @@ export class StoreRepository extends StoreRepositoryEntity {
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
         user
-          ? 'Tienda y productos removidos exitosamente.'
-          : 'Usuario no encontrado.',
+          ? 'Categoría de ingreso/egreso removido exitosamente'
+          : 'Usuario no encontrado',
         null,
       );
     } catch (error) {

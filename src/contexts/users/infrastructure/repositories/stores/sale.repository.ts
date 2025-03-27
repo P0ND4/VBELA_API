@@ -41,7 +41,7 @@ export class SaleRepository extends SaleRepositoryEntity {
 
       if (user) {
         await this.discount(dto);
-        await this.orderEvents.events(dto);
+        await this.orderEvents.events(identifier, dto);
       }
 
       return new ApiResponse(
@@ -74,7 +74,7 @@ export class SaleRepository extends SaleRepositoryEntity {
 
       if (user) {
         await this.discount(dto);
-        await this.orderEvents.events(dto);
+        await this.orderEvents.events(identifier, dto);
       }
 
       return new ApiResponse(

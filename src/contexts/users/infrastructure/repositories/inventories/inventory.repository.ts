@@ -100,6 +100,12 @@ export class InventoryRepository extends InventoryRepositoryEntity {
         .map(recipe => recipe.id);
       user.recipes = user.recipes.filter(recipe => recipe.inventoryID !== inventoryID);
 
+      // Remove stockGroup
+      user.stockGroup = user.stockGroup.filter(group => group.ownerID !== inventoryID);
+
+      // Remove recipeGroup
+      user.recipeGroup = user.recipeGroup.filter(group => group.ownerID !== inventoryID);
+
       // Remove stocks from products
       user.products = user.products.map(product => ({
         ...product,

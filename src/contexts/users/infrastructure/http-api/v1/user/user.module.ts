@@ -14,7 +14,7 @@ import { SettingController } from './controllers/setting.controller';
   controllers: [UserController, SettingController],
   providers: [
     UserRepository,
-    SettingRepository,  
+    SettingRepository,
     UserUseCase,
     SettingUseCase,
     { provide: UserRepositoryEntity, useExisting: UserRepository },
