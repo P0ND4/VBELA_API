@@ -3,9 +3,10 @@ type SubCategory = {
   subcategory: string;
 };
 
-export type Ingredients = {
+export type RecipeIngredients = {
   id: string;
   quantity: number;
+  type: string;
 };
 
 export interface Recipe {
@@ -14,7 +15,7 @@ export interface Recipe {
   value: number;
   categories: string[];
   subcategories: SubCategory[];
-  ingredients: Ingredients[];
+  ingredients: RecipeIngredients[];
   name: string;
   description: string;
   visible: boolean;

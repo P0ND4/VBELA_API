@@ -3,23 +3,22 @@ import {
   ArrayNotEmpty,
   IsArray,
   IsBoolean,
+  IsDefined,
   IsNotEmpty,
   IsNumber,
+  IsObject,
   IsString,
   ValidateNested,
 } from 'class-validator';
+import { MovementHttpDto } from './movement.http-dto';
 
-export class RecipeIngredients {
+export class PortionIngredients {
   @IsString()
   @IsNotEmpty()
   id: string;
 
   @IsNumber()
   quantity: number;
-
-  @IsString()
-  @IsNotEmpty()
-  type: string;
 }
 
 export class SubCategory {
@@ -32,7 +31,7 @@ export class SubCategory {
   subcategory: string;
 }
 
-export class RecipeHttpDto {
+export class PortionHttpDto {
   @IsString()
   @IsNotEmpty()
   id: string;
@@ -40,9 +39,6 @@ export class RecipeHttpDto {
   @IsString()
   @IsNotEmpty()
   inventoryID: string;
-
-  @IsNumber()
-  value: number;
 
   @IsArray()
   categories: string[];
@@ -54,7 +50,7 @@ export class RecipeHttpDto {
 
   @IsArray()
   @ArrayNotEmpty()
-  ingredients: RecipeIngredients[];
+  ingredients: PortionIngredients[];
 
   @IsString()
   @IsNotEmpty()
@@ -67,8 +63,24 @@ export class RecipeHttpDto {
   visible: boolean;
 
   @IsNumber()
+  quantity: number;
+
+  @IsNumber()
   creationDate: number;
 
   @IsNumber()
   modificationDate: number;
+}
+
+export class PortionActivityHttpDto {
+  @IsDefined()
+  @IsObject()
+  @ValidateNested()
+  @Type(() => PortionHttpDto)
+  portion!: PortionHttpDto;
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => MovementHttpDto)
+  movements: MovementHttpDto[];
 }

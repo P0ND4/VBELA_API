@@ -2,22 +2,55 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../schema/user/user.schema';
 import { Model } from 'mongoose';
-import { Movement, Stock } from '../../../domain/types';
+import { ActivityDTO, Portion } from '../../../domain/types';
 import { ApiResponse, Status } from '../../../../shared/api.response';
-import { StockRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.repository.entity';
+import { PortionRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/portion.repository.entity';
+import { MovementEvents } from '../common/movement.events';
 
 @Injectable()
-export class StockRepository extends StockRepositoryEntity {
-  constructor(@InjectModel(User.name) public userModel: Model<User>) {
+export class PortionRepository extends PortionRepositoryEntity {
+  constructor(
+    @InjectModel(User.name) public userModel: Model<User>,
+    private readonly movementEvents: MovementEvents,
+  ) {
     super();
   }
 
-  async add(identifier: string, stock: Stock): Promise<ApiResponse<null>> {
+  async addActivity(
+    identifier: string,
+    dto: ActivityDTO,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate(
+          { identifier, 'portions.id': dto.portion.id },
+          { $set: { 'portions.$': dto.portion } },
+          { new: true },
+        )
+        .exec();
+
+      if (user) await this.movementEvents.events(identifier, dto.movements);
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
+        user ? 'Porción agregada exitosamente.' : 'Usuario no encontrado.',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async add(identifier: string, portion: Portion): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
           { identifier },
-          { $push: { stocks: stock } },
+          { $push: { portions: portion } },
           { new: true },
         )
         .exec();
@@ -25,7 +58,7 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.CREATED : HttpStatus.NO_CONTENT,
-        user ? 'Stock agregado exitosamente.' : 'Usuario no encontrado.',
+        user ? 'Porción agregada exitosamente.' : 'Usuario no encontrado.',
         null,
       );
     } catch (error) {
@@ -39,13 +72,13 @@ export class StockRepository extends StockRepositoryEntity {
   async edit(
     identifier: string,
     id: string,
-    stock: Stock,
+    portion: Portion,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel
         .findOneAndUpdate(
-          { identifier, 'stocks.id': id },
-          { $set: { 'stocks.$': stock } },
+          { identifier, 'portions.id': id },
+          { $set: { 'portions.$': portion } },
           { new: true },
         )
         .exec();
@@ -53,7 +86,9 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         user ? Status.Success : Status.Error,
         user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
-        user ? 'Stock editado exitosamente.' : 'Usuario o stock no encontrado.',
+        user
+          ? 'Porción editada exitosamente.'
+          : 'Usuario o receta no encontrada.',
         null,
       );
     } catch (error) {
@@ -66,7 +101,7 @@ export class StockRepository extends StockRepositoryEntity {
 
   async remove(
     identifier: string,
-    stockID: string,
+    portionID: string,
   ): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel.findOne({ identifier }).exec();
@@ -80,34 +115,16 @@ export class StockRepository extends StockRepositoryEntity {
         );
       }
 
-      // Remove stock
-      user.stocks = user.stocks.filter((stock) => stock.id !== stockID);
-
-      // Remove stock from products
-      user.products = user.products.map((product) => ({
-        ...product,
-        stockIDS: product.stockIDS?.filter((id) => id !== stockID),
-      }));
-
-      // Remove stock from menu
-      user.menu = user.menu.map((menuItem) => ({
-        ...menuItem,
-        stockIDS: menuItem.stockIDS?.filter((id) => id !== stockID),
-      }));
+      // Remove portion
+      user.portions = user.portions.filter(
+        (portion) => portion.id !== portionID,
+      );
 
       // Remove stock from recipes
       user.recipes = user.recipes.map((recipe) => ({
         ...recipe,
         ingredients: recipe.ingredients.filter(
-          (ingredient) => ingredient.id !== stockID,
-        ),
-      }));
-
-      // Remove stock from portions
-      user.portions = user.portions.map((portion) => ({
-        ...portion,
-        ingredients: portion.ingredients.filter(
-          (ingredient) => ingredient.id !== stockID,
+          (ingredient) => ingredient.id !== portionID,
         ),
       }));
 
@@ -116,7 +133,7 @@ export class StockRepository extends StockRepositoryEntity {
       return new ApiResponse(
         Status.Success,
         HttpStatus.OK,
-        'Stock y referencias eliminadas exitosamente.',
+        'Porción y referencias eliminadas exitosamente.',
         null,
       );
     } catch (error) {

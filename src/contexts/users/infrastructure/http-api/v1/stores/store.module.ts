@@ -12,7 +12,7 @@ import { StoreUseCase } from 'src/contexts/users/application/stores/store.use-ca
 import { ProductRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/product.repository.entity';
 import { SaleRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/sale.repository.entity';
 import { StoreRepositoryEntity } from 'src/contexts/users/domain/repositories/stores/store.repository.entity';
-import { OrderEvents } from '../../../repositories/common/order.events';
+import { MovementEvents } from '../../../repositories/common/movement.events';
 import { ProductGroupController } from './controllers/product.group.controller';
 import { ProductGroupRepository } from '../../../repositories/stores/product.group.repository';
 import { ProductGroupUseCase } from 'src/contexts/users/application/stores/product.group.use-case';
@@ -27,7 +27,7 @@ import { ProductGroupRepositoryEntity } from 'src/contexts/users/domain/reposito
     ProductGroupController,
   ],
   providers: [
-    OrderEvents,
+    MovementEvents,
     ProductRepository,
     SaleRepository,
     StoreRepository,

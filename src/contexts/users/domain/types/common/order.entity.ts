@@ -1,5 +1,5 @@
-import { Movement } from "../inventories";
-import { Discount } from "./element.entity";
+import { Movement, Portion } from '../inventories';
+import { Discount } from './element.entity';
 
 export type Selection = {
   id: string;
@@ -44,4 +44,5 @@ export interface OrderDTO {
   order: Order;
   discounts: Discount[];
   movements: Movement[];
+  portions: Portion[];
 }

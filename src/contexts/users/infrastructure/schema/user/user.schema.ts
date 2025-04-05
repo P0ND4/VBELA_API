@@ -18,6 +18,7 @@ import {
   Economy,
   EconomicGroup,
   Movement,
+  Portion,
 } from 'src/contexts/users/domain/types';
 
 export type UserDocument = HydratedDocument<User>;
@@ -120,6 +121,12 @@ export class User extends Document {
 
   @Prop({ type: [Object], default: [] })
   movements: Movement[];
+
+  @Prop({ type: [Object], default: [] })
+  portionGroup: Group[];
+
+  @Prop({ type: [Object], default: [] })
+  portions: Portion[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

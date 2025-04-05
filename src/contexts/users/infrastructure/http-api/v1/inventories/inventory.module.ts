@@ -24,6 +24,15 @@ import { StockGroupUseCase } from 'src/contexts/users/application/inventories/st
 import { RecipeGroupUseCase } from 'src/contexts/users/application/inventories/recipe.group.use-case';
 import { StockGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/stock.group.repository.entity';
 import { RecipeGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/recipe.group.repository.entity';
+import { PortionController } from './controllers/portion.controller';
+import { PortionGroupController } from './controllers/portion.group.controller';
+import { PortionGroupRepository } from '../../../repositories/inventories/portion.group.repository';
+import { PortionRepository } from '../../../repositories/inventories/portion.repository';
+import { PortionUseCase } from 'src/contexts/users/application/inventories/portion.use-case';
+import { PortionGroupUseCase } from 'src/contexts/users/application/inventories/portion.group.use-case';
+import { PortionGroupRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/portion.group.repository.entity';
+import { PortionRepositoryEntity } from 'src/contexts/users/domain/repositories/inventories/portion.repository.entity';
+import { MovementEvents } from '../../../repositories/common/movement.events';
 
 @Module({
   imports: [SchemaModule],
@@ -31,31 +40,40 @@ import { RecipeGroupRepositoryEntity } from 'src/contexts/users/domain/repositor
     InventoryController,
     RecipeController,
     StockController,
+    PortionController,
     MovementController,
     StockGroupController,
     RecipeGroupController,
+    PortionGroupController
   ],
   providers: [
+    MovementEvents,
     InventoryRepository,
     RecipeRepository,
     StockRepository,
+    PortionRepository,
     MovementRepository,
     StockGroupRepository,
     RecipeGroupRepository,
+    PortionGroupRepository,
 
     InventoryUseCase,
     RecipeUseCase,
     StockUseCase,
+    PortionUseCase,
     MovementUseCase,
     StockGroupUseCase,
     RecipeGroupUseCase,
+    PortionGroupUseCase,
 
     { provide: InventoryRepositoryEntity, useExisting: InventoryRepository },
     { provide: RecipeRepositoryEntity, useExisting: RecipeRepository },
     { provide: StockRepositoryEntity, useExisting: StockRepository },
+    { provide: PortionRepositoryEntity, useExisting: PortionRepository },
     { provide: MovementRepositoryEntity, useExisting: MovementRepository },
     { provide: StockGroupRepositoryEntity, useExisting: StockGroupRepository },
     { provide: RecipeGroupRepositoryEntity, useExisting: RecipeGroupRepository },
+    { provide: PortionGroupRepositoryEntity, useExisting: PortionGroupRepository },
   ],
 })
 export class InventoryModule {}

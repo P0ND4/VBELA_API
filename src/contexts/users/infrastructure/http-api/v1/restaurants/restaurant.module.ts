@@ -16,7 +16,7 @@ import { MenuRepositoryEntity } from 'src/contexts/users/domain/repositories/res
 import { OrderRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/order.repository.entity';
 import { RestaurantRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/restaurant.repository.entity';
 import { TableRepositoryEntity } from 'src/contexts/users/domain/repositories/restaurants/table.repository.entity';
-import { OrderEvents } from '../../../repositories/common/order.events';
+import { MovementEvents } from '../../../repositories/common/movement.events';
 import { MenuGroupController } from './controllers/menu.group.controller';
 import { MenuGroupRepository } from '../../../repositories/restaurants/menu.group.repository';
 import { MenuGroupUseCase } from 'src/contexts/users/application/restaurants/menu.group.use-case';
@@ -32,7 +32,7 @@ import { MenuGroupRepositoryEntity } from 'src/contexts/users/domain/repositorie
     MenuGroupController,
   ],
   providers: [
-    OrderEvents,
+    MovementEvents,
     MenuRepository,
     OrderRepository,
     RestaurantRepository,

@@ -12,6 +12,7 @@ import {
   IsDefined,
 } from 'class-validator';
 import { MovementHttpDto } from '../inventories/dto/movement.http-dto';
+import { PortionHttpDto } from '../inventories/dto/portion.http-dto';
 
 class Selection {
   @IsString()
@@ -152,4 +153,9 @@ export class OrderHttpDto {
   @ValidateNested({ each: true })
   @Type(() => MovementHttpDto)
   movements: MovementHttpDto[];
+
+  @IsArray()
+  @ValidateNested({ each: true })
+  @Type(() => PortionHttpDto)
+  portions: PortionHttpDto[];
 }

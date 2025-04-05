@@ -18,6 +18,7 @@ import {
   Group,
   EconomicGroup,
   Movement,
+  Portion,
 } from './types';
 
 export interface PrimitiveUser {
@@ -50,6 +51,8 @@ export interface PrimitiveUser {
   economies: Economy[];
   economicGroup: EconomicGroup[];
   movements: Movement[];
+  portions: Portion[];
+  portionGroup: Group[];
 }
 
 export class UserEntity {
@@ -94,6 +97,8 @@ export class UserEntity {
       economies: createUser.economies || [],
       economicGroup: createUser.economicGroup || [],
       movements: createUser.movements || [],
+      portions: createUser.portions || [],
+      portionGroup: createUser.portionGroup || [],
     });
   }
 
