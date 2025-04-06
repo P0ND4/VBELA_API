@@ -16,6 +16,7 @@ export interface Economy {
   date: number;
   reference: string;
   brand: string;
+  operative: boolean;
   creationDate: number;
   modificationDate: number;
 }

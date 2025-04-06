@@ -1,5 +1,6 @@
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsNotEmpty,
   IsNumber,
   IsObject,
@@ -66,6 +67,9 @@ export class EconomyHttpDto {
 
   @IsString()
   brand: string;
+
+  @IsBoolean()
+  operative: boolean;
 
   @IsNumber()
   creationDate: number;
