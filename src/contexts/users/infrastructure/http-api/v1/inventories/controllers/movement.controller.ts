@@ -36,6 +36,14 @@ export class MovementController {
     return this.movementUseCase.edit(req.user.identifier, id, movementHttpDto);
   }
 
+  @Delete('multiple/:id')
+  async removeMultiple(
+    @Param('id') id: string,
+    @Req() req,
+  ): Promise<ApiResponse<null>> {
+    return this.movementUseCase.removeMultiple(req.user.identifier, id);
+  }
+
   @Delete(':id')
   async remove(
     @Param('id') id: string,

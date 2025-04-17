@@ -11,6 +11,7 @@ export interface Stock {
   categories: string[];
   subcategories: SubCategory[];
   visible: boolean;
+  upperLimit: number;
   reorder: number;
   reference: string;
   brand: string;

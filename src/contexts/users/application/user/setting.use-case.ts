@@ -32,6 +32,18 @@ export class SettingUseCase {
     return await this.settingRepository.color(identifier, color);
   }
 
+  async tip(identifier: string, tip: number): Promise<ApiResponse<null>> {
+    return await this.settingRepository.tip(identifier, tip);
+  }
+
+  async tax(identifier: string, tax: number): Promise<ApiResponse<null>> {
+    return await this.settingRepository.tax(identifier, tax);
+  }
+
+  async initialBasis(identifier: string, initialBasis: number): Promise<ApiResponse<null>> {
+    return await this.settingRepository.initialBasis(identifier, initialBasis);
+  }
+
   async addPaymentMethods(
     identifier: string,
     paymentMethods: PaymentMethods,

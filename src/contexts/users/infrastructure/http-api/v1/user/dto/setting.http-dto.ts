@@ -30,6 +30,21 @@ export class ColorHttpDto {
   color: number;
 }
 
+export class TipHttpDto {
+  @IsNumber()
+  tip: number;
+}
+
+export class InitialBasisHttpDto {
+  @IsNumber()
+  initialBasis: number;
+}
+
+export class TaxHttpDto {
+  @IsNumber()
+  tax: number;
+}
+
 export class InvoiceInformationHttpDto {
   @IsString()
   company: string;

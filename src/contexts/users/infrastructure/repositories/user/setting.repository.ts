@@ -64,6 +64,71 @@ export class SettingRepository extends SettingRepositoryEntity {
     }
   }
 
+  async tip(identifier: string, tip: number): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate({ identifier }, { tip }, { new: true })
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Propina actualizado exitosamente' : 'Usuario no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async tax(identifier: string, tax: number): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate({ identifier }, { tax }, { new: true })
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user ? 'Impuesto actualizado exitosamente' : 'Usuario no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  async initialBasis(
+    identifier: string,
+    initialBasis: number,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.userModel
+        .findOneAndUpdate({ identifier }, { initialBasis }, { new: true })
+        .exec();
+
+      return new ApiResponse(
+        user ? Status.Success : Status.Error,
+        user ? HttpStatus.OK : HttpStatus.NO_CONTENT,
+        user
+          ? 'Base inicial actualizado exitosamente'
+          : 'Usuario no encontrado',
+        null,
+      );
+    } catch (error) {
+      throw new HttpException(
+        error.message || 'Error interno del servidor',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   async color(identifier: string, color: number): Promise<ApiResponse<null>> {
     try {
       const user = await this.userModel

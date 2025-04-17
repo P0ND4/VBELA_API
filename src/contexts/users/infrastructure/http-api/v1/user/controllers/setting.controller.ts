@@ -15,8 +15,11 @@ import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-
 import {
   ColorHttpDto,
   DarkModeHttpDto,
+  InitialBasisHttpDto,
   InvoiceInformationHttpDto,
   PaymentMethodsHttpDto,
+  TaxHttpDto,
+  TipHttpDto,
 } from '../dto/setting.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 
@@ -42,6 +45,33 @@ export class SettingController {
     @Body() colorHttpDto: ColorHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.color(req.user.identifier, colorHttpDto.color);
+  }
+
+  @Patch('tip')
+  async tip(
+    @Request() req,
+    @Body() tipHttpDto: TipHttpDto,
+  ): Promise<ApiResponse<null>> {
+    return this.settingUseCase.tip(req.user.identifier, tipHttpDto.tip);
+  }
+
+  @Patch('tax')
+  async tax(
+    @Request() req,
+    @Body() taxHttpDto: TaxHttpDto,
+  ): Promise<ApiResponse<null>> {
+    return this.settingUseCase.tax(req.user.identifier, taxHttpDto.tax);
+  }
+
+  @Patch('initial-basis')
+  async initialBasis(
+    @Request() req,
+    @Body() initialBasisHttpDto: InitialBasisHttpDto,
+  ): Promise<ApiResponse<null>> {
+    return this.settingUseCase.initialBasis(
+      req.user.identifier,
+      initialBasisHttpDto.initialBasis,
+    );
   }
 
   @Patch('invoice-information')

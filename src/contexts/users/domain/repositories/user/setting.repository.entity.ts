@@ -5,6 +5,9 @@ export abstract class SettingRepositoryEntity {
   abstract darkMode(identifier: string, darkMode: boolean): Promise<ApiResponse<null>>;
   abstract invoiceInformation(identifier: string, invoiceInformation: InvoiceInformation): Promise<ApiResponse<null>>;
   abstract color(identifier: string, color: number): Promise<ApiResponse<null>>;
+  abstract tip(identifier: string, tip: number): Promise<ApiResponse<null>>;
+  abstract tax(identifier: string, tax: number): Promise<ApiResponse<null>>;
+  abstract initialBasis(identifier: string, initialBasis: number): Promise<ApiResponse<null>>;
   abstract addPaymentMethods(identifier: string, paymentMethods: PaymentMethods): Promise<ApiResponse<null>>;
   abstract editPaymentMethods(identifier: string, id: string, paymentMethods: PaymentMethods): Promise<ApiResponse<null>>;
   abstract removePaymentMethods(identifier: string, paymentMethodsId: string): Promise<ApiResponse<null>>;

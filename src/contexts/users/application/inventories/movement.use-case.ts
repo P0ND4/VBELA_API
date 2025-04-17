@@ -28,4 +28,11 @@ export class MovementUseCase {
   ): Promise<ApiResponse<null>> {
     return await this.movementRepository.remove(identifier, movementID);
   }
+
+  async removeMultiple(
+    identifier: string,
+    stockID: string,
+  ): Promise<ApiResponse<null>> {
+    return await this.movementRepository.removeMultiple(identifier, stockID);
+  }
 }

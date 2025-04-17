@@ -45,6 +45,9 @@ export class StockHttpDto {
   visible: boolean;
 
   @IsNumber()
+  upperLimit: number;
+
+  @IsNumber()
   reorder: number;
 
   @IsString()

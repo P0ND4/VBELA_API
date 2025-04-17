@@ -143,6 +143,30 @@ export class MovementRepository extends MovementRepositoryEntity {
     }
   }
 
+  async removeMultiple(
+    identifier: string,
+    stockID: string,
+  ): Promise<ApiResponse<null>> {
+    try {
+      const user = await this.findUser(identifier);
+      if (!user)
+        return this.errorResponse(
+          HttpStatus.NOT_FOUND,
+          'Usuario no encontrado.',
+        );
+
+      user.movements = user.movements.filter((m) => m.stock.id !== stockID);
+      await user.save();
+
+      return this.successResponse(
+        HttpStatus.OK,
+        'Movimientos removido del stock satisfactoriamente.',
+      );
+    } catch (error) {
+      this.handleError(error);
+    }
+  }
+
   private successResponse(
     status: HttpStatus,
     message: string,

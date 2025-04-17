@@ -56,6 +56,15 @@ export class User extends Document {
   @Prop({ default: 0 })
   color: number;
 
+  @Prop({ default: 0.1 })
+  tip: number;
+
+  @Prop({ default: 0 })
+  tax: number;
+
+  @Prop({ default: 0 })
+  initialBasis: number;
+
   @Prop({ type: [Object], default: [] })
   paymentMethods: PaymentMethods[];
 

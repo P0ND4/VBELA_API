@@ -29,6 +29,9 @@ export interface PrimitiveUser {
   darkMode: boolean;
   invoiceInformation: InvoiceInformation;
   color: number;
+  tip: number;
+  tax: number;
+  initialBasis: number;
   stocks: Stock[];
   stockGroup: Group[];
   inventories: Inventory[];
@@ -75,6 +78,9 @@ export class UserEntity {
         complement: '',
       },
       color: createUser.color || 0,
+      tip: createUser.tip || 0.1,
+      tax: createUser.tax || 0,
+      initialBasis: createUser.initialBasis || 0,
       stocks: createUser.stocks || [],
       stockGroup: createUser.stockGroup || [],
       inventories: createUser.inventories || [],

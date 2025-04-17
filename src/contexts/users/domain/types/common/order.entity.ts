@@ -30,6 +30,8 @@ export interface Order {
   order: string;
   status: string;
   selection: Selection[];
+  tip: number;
+  tax: number;
   discount: number;
   paid: number;
   total: number;

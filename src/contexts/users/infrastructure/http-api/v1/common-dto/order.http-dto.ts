@@ -101,6 +101,12 @@ export class Order {
   selection: Selection[];
 
   @IsNumber()
+  tip: number;
+  
+  @IsNumber()
+  tax: number;
+
+  @IsNumber()
   discount: number;
 
   @IsNumber()
