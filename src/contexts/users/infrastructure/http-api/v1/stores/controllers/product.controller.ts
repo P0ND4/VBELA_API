@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { ElementHttpDto } from '../../common-dto/element.http-dto';
 import { ProductUseCase } from 'src/contexts/users/application/stores/product.use-case';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/product`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToStore"])
 export class ProductController {
   constructor(private readonly productUseCase: ProductUseCase) {}
 

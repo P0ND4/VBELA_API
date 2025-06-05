@@ -10,7 +10,6 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { V1_USER } from '../../../route.constants';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-case';
 import {
   ColorHttpDto,
@@ -22,9 +21,11 @@ import {
   TipHttpDto,
 } from '../dto/setting.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/setting`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
 export class SettingController {
   constructor(private readonly settingUseCase: SettingUseCase) {}
 
@@ -47,6 +48,7 @@ export class SettingController {
     return this.settingUseCase.color(req.user.identifier, colorHttpDto.color);
   }
 
+  @RequiredPermissions(["admin"])
   @Patch('tip')
   async tip(
     @Request() req,
@@ -55,6 +57,7 @@ export class SettingController {
     return this.settingUseCase.tip(req.user.identifier, tipHttpDto.tip);
   }
 
+  @RequiredPermissions(["admin"])
   @Patch('tax')
   async tax(
     @Request() req,
@@ -63,6 +66,7 @@ export class SettingController {
     return this.settingUseCase.tax(req.user.identifier, taxHttpDto.tax);
   }
 
+  @RequiredPermissions(["admin"])
   @Patch('initial-basis')
   async initialBasis(
     @Request() req,
@@ -74,6 +78,7 @@ export class SettingController {
     );
   }
 
+  @RequiredPermissions(["admin"])
   @Patch('invoice-information')
   async invoiceInformation(
     @Request() req,
@@ -85,6 +90,7 @@ export class SettingController {
     );
   }
 
+  @RequiredPermissions(["admin"])
   @Post('payment-methods')
   async addPaymentMethods(
     @Request() req,
@@ -96,6 +102,7 @@ export class SettingController {
     );
   }
 
+  @RequiredPermissions(["admin"])
   @Put('payment-methods/:id')
   async editPaymentMethods(
     @Request() req,
@@ -109,6 +116,7 @@ export class SettingController {
     );
   }
 
+  @RequiredPermissions(["admin"])
   @Delete('payment-methods/:id')
   async removePaymentMethods(
     @Param('id') id: string,

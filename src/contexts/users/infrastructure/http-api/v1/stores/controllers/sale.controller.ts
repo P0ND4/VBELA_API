@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { OrderHttpDto } from '../../common-dto/order.http-dto';
 import { SaleUseCase } from 'src/contexts/users/application/stores/sale.use-case';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/sale`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToStore"])
 export class SaleController {
   constructor(private readonly saleUseCase: SaleUseCase) {}
 

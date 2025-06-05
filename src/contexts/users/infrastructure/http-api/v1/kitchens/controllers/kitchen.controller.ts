@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { Kitchen, KitchenHttpDto } from '../dto/kitchen.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { KitchenUseCase } from 'src/contexts/users/application/kitchens/kitchen.use-case';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/kitchen`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToKitchen"])
 export class KitchenController {
   constructor(private readonly kitchenUseCase: KitchenUseCase) {}
 

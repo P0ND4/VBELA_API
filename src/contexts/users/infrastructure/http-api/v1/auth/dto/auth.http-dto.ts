@@ -1,17 +1,18 @@
-import { IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 
-export class LoginHttpDto {
+export class LogoutHttpDto {
+  @IsNotEmpty()
+  @IsString()
+  accessToken: string;
+
+  @IsNotEmpty()
+  @IsString()
+  refreshToken: string;
+}
+export class GetSessionsHttpDto {
   @IsNotEmpty()
   @IsString()
   identifier: string;
-
-  @IsOptional()
-  @IsString()
-  collaborator?: string | null;
-
-  @IsOptional()
-  @IsString()
-  expoID?: string | null;
 
   @IsString()
   @IsNotEmpty()
@@ -19,6 +20,20 @@ export class LoginHttpDto {
 
   @IsNumber()
   timestamp: number;
+}
+
+export class LoginHttpDto {
+  @IsNotEmpty()
+  @IsString()
+  identifier: string;
+
+  @IsString()
+  @IsNotEmpty()
+  selected: string;
+
+  @IsString()
+  @IsNotEmpty()
+  token: string;
 
   constructor(partial: Partial<LoginHttpDto>) {
     Object.assign(this, partial);

@@ -23,22 +23,24 @@ import { CheckRepositoryEntity } from 'src/contexts/users/domain/repositories/au
 import { CheckController } from './controllers/check.controller';
 import { TwilioService } from 'src/contexts/shared/twilio/twilio.service';
 import { TokenBlacklistService } from '../../../services/token-blacklist.service';
+import { TemporalTokenService } from '../../../services/temporal-token.service';
 
 @Module({
   imports: [
     RedisModule,
-    CodeModule,
-    SchemaModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       useFactory: jwtContants,
       inject: [ConfigService],
     }),
+    CodeModule,
+    SchemaModule,
   ],
   controllers: [AuthController, VerifyController, CheckController],
   providers: [
     TokenBlacklistService,
+    TemporalTokenService,
 
     AuthRepository,
     AuthUseCase,
@@ -46,11 +48,11 @@ import { TokenBlacklistService } from '../../../services/token-blacklist.service
     CheckRepository,
     CheckUseCase,
 
-    VerifyRepository,
-    VerifyUseCase,
-
     CustomStrategy,
     JwtStrategy,
+
+    VerifyRepository,
+    VerifyUseCase,
 
     { provide: AuthRepositoryEntity, useExisting: AuthRepository },
     { provide: VerifyRepositoryEntity, useExisting: VerifyRepository },

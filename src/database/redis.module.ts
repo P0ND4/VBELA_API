@@ -33,7 +33,22 @@ import { Redis } from 'ioredis';
         });
       },
     },
+    {
+      provide: 'REDIS_TEMPORAL_TOKEN',
+      useFactory: () => {
+        return new Redis({
+          host: 'localhost',
+          port: 6379,
+          db: 3,
+        });
+      },
+    },
   ],
-  exports: ['REDIS_THROTTLER', 'REDIS_VERIFICATION', 'REDIS_BLACKLIST_TOKEN'],
+  exports: [
+    'REDIS_THROTTLER',
+    'REDIS_VERIFICATION',
+    'REDIS_BLACKLIST_TOKEN',
+    'REDIS_TEMPORAL_TOKEN',
+  ],
 })
 export class RedisModule {}

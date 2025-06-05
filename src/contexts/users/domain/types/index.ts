@@ -7,3 +7,4 @@ export * from './handlers';
 export * from './collaborators';
 export * from './suppliers';
 export * from './economies';
+export * from './login';

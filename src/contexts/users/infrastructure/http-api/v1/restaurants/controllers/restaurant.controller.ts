@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { RestaurantUseCase } from 'src/contexts/users/application/restaurants/restaurant.use-case';
 import { LocationHttpDto } from '../../common-dto/location.http-dto';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/restaurant`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToRestaurant"])
 export class RestaurantController {
   constructor(private readonly restaurantUseCase: RestaurantUseCase) {}
 

@@ -8,14 +8,17 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
+import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
 import { V1_USER } from '../../../route.constants';
 import { InventoryHttpDto } from '../dto/inventory.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { InventoryUseCase } from 'src/contexts/users/application/inventories/inventory.use-case';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/inventory`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToInventory"])
 export class InventoryController {
   constructor(private readonly inventoryUseCase: InventoryUseCase) {}
 

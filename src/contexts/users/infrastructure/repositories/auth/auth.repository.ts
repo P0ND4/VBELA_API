@@ -1,27 +1,50 @@
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import {
   AuthRepositoryEntity,
-  ValidateDto,
+  Session,
 } from '../../../domain/repositories/auth/auth.repository.entity';
-import { PrimitiveUser, UserEntity } from '../../../domain/user.entity';
 import { User } from '../../schema/user/user.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { ApiResponse, Status } from 'src/contexts/shared/api.response';
+import { TemporalTokenService } from '../../services/temporal-token.service';
+import { PrimitiveUser, UserEntity } from 'src/contexts/users/domain/user.entity';
 
 @Injectable()
 export class AuthRepository extends AuthRepositoryEntity {
-  constructor(@InjectModel(User.name) public userModel: Model<User>) {
+  constructor(
+    @InjectModel(User.name) public userModel: Model<User>,
+    private temporalTokenService: TemporalTokenService,
+  ) {
     super();
   }
 
-  async validate({ identifier, expoID }: ValidateDto): Promise<PrimitiveUser> {
-    const existingUser = await this.userModel.findOne({ identifier }).exec();
+  async getSessions(
+    identifier: string,
+  ): Promise<ApiResponse<{ sessions: Session[]; token: string }>> {
+    const users = await this.userModel.find().exec();
 
-    if (existingUser) return UserEntity.transform(existingUser).toPrimitives();
+    const userAccount = users.find((u) => u.identifier === identifier);
+    const account = userAccount ? { identifier, type: 'user' } : null;
 
-    const newUser = new this.userModel({ identifier, expoID });
-    const savedUser = await newUser.save();
+    const collaboratorSessions = users
+      .filter((user) =>
+        user.collaborators.some((collab) => collab.identifier === identifier),
+      )
+      .map((user) => ({ identifier: user.identifier, type: 'collaborator' }));
 
-    return UserEntity.transform(savedUser).toPrimitives();
+    const sessions: Session[] = [
+      ...(account ? [account] : []),
+      ...collaboratorSessions,
+    ];
+
+    const token = await this.temporalTokenService.generateToken();
+
+    return new ApiResponse(
+      Status.Success,
+      HttpStatus.OK,
+      'Validación de sesión exitosa.',
+      { sessions, token },
+    );
   }
 }

@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { RecipeHttpDto } from '../dto/recipe.http-dto';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { RecipeUseCase } from 'src/contexts/users/application/inventories/recipe.use-case';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/recipe`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToInventory"])
 export class RecipeController {
   constructor(private readonly recipeUseCase: RecipeUseCase) {}
 

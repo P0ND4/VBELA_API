@@ -38,11 +38,11 @@ export interface PrimitiveUser {
   recipes: Recipe[];
   recipeGroup: Group[];
   stores: Location[];
-  restaurants: Location[];
   productGroup: Group[];
   products: Element[];
   sales: Order[];
   kitchens: Kitchen[];
+  restaurants: Location[];
   menuGroup: Group[];
   menu: Element[];
   orders: Order[];

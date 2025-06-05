@@ -9,7 +9,7 @@ import { MailService } from 'src/contexts/shared/mail/mail.service';
 import { ThrottlerStorageRedisService } from '@nest-lab/throttler-storage-redis';
 import { RedisModule } from 'src/database/redis.module';
 import { APP_GUARD } from '@nestjs/core';
-import { GatewayModule } from 'src/contexts/users/infrastructure/websockets/websocket.module';
+import { GatewayModule } from 'src/contexts/users/infrastructure/websockets/v1/ws.module';
 
 @Module({
   imports: [

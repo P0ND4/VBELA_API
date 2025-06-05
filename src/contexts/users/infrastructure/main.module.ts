@@ -8,6 +8,7 @@ import { StoreModule } from './http-api/v1/stores/store.module';
 import { HandlerModule } from './http-api/v1/handlers/handler.module';
 import { SupplierModule } from './http-api/v1/suppliers/supplier.module';
 import { EconomyModule } from './http-api/v1/economies/economy.module';
+import { CollaboratorModule } from './http-api/v1/collaborators/collaborator.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { EconomyModule } from './http-api/v1/economies/economy.module';
     HandlerModule,
     SupplierModule,
     EconomyModule,
+    CollaboratorModule
   ],
 })
 export class MainModule {}

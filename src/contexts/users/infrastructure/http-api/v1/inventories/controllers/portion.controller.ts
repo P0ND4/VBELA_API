@@ -8,7 +8,6 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { PortionUseCase } from 'src/contexts/users/application/inventories/portion.use-case';
@@ -16,9 +15,12 @@ import {
   PortionActivityHttpDto,
   PortionHttpDto,
 } from '../dto/portion.http-dto';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/portion`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(["accessToInventory"])
 export class PortionController {
   constructor(private readonly portionUseCase: PortionUseCase) {}
 

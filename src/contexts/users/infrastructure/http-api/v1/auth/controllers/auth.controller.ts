@@ -1,9 +1,19 @@
-import { Controller, UseGuards, Request, Post, Get } from '@nestjs/common';
+import {
+  Controller,
+  UseGuards,
+  Request,
+  Post,
+  Get,
+  Body,
+} from '@nestjs/common';
 import { CustomAuthGuard } from '../guards/custom-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { minutes, Throttle } from '@nestjs/throttler';
 import { AuthUseCase } from 'src/contexts/users/application/auth/auth.use-case';
-import { JwtAuthGuard } from '../guards/jwt-auth.guard';
+import { GetSessionsHttpDto, LogoutHttpDto } from '../dto/auth.http-dto';
+import { AuthValidationGuard } from '../guards/auth-validation.guard';
+import { RefreshTokenGuard } from '../guards/refresh-token.guard';
+import { AccessTokenGuard } from '../guards/access-token.guard';
 
 @Controller(`${V1_USER}/auth`)
 @Throttle({ default: { ttl: minutes(1), limit: 3 } })
@@ -15,16 +25,27 @@ export class AuthController {
     return this.authUseCase.getServerTime();
   }
 
+  @UseGuards(AuthValidationGuard)
+  @Post('sessions')
+  async getSessions(@Body() dto: GetSessionsHttpDto, @Request() req) {
+    return this.authUseCase.getSessions(dto.identifier);
+  }
+
   @UseGuards(CustomAuthGuard)
   @Post('login')
   async login(@Request() req) {
     return req.user;
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(RefreshTokenGuard)
+  @Post('refresh-token')
+  async refreshToken(@Request() req) {
+    return this.authUseCase.refreshToken(req.user);
+  }
+
+  @UseGuards(AccessTokenGuard)
   @Post('logout')
-  async logout(@Request() req) {
-    const token = req.headers.authorization.split(' ')[1];
-    return this.authUseCase.logout(token);
+  async logout(@Body() body: LogoutHttpDto) {
+    return this.authUseCase.logout(body.accessToken, body.refreshToken);
   }
 }

@@ -8,14 +8,16 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../../auth/guards/jwt-auth.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { EconomicGroupUseCase } from 'src/contexts/users/application/economies/economic.group.use-case';
 import { EconomicGroupHttpDto } from '../dto/economic.group.http-dto';
+import { PermissionAccessTokenGuard } from '../../auth/guards/permission-access-token.guard';
+import { RequiredPermissions } from '../../auth/decorators/required-permissions.decorator';
 
 @Controller(`${V1_USER}/economic-group`)
-@UseGuards(JwtAuthGuard)
+@UseGuards(PermissionAccessTokenGuard)
+@RequiredPermissions(['accessToEconomy'])
 export class EconomicGroupController {
   constructor(private readonly economicGroupUseCase: EconomicGroupUseCase) {}
 
