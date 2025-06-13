@@ -8,11 +8,14 @@ import { SettingRepository } from '../../../repositories/user/setting.repository
 import { SettingUseCase } from 'src/contexts/users/application/user/setting.use-case';
 import { SettingRepositoryEntity } from 'src/contexts/users/domain/repositories/user/setting.repository.entity';
 import { SettingController } from './controllers/setting.controller';
+import { ValidationEvents } from '../../../repositories/common/validation.events';
 
 @Module({
   imports: [SchemaModule],
   controllers: [UserController, SettingController],
   providers: [
+    ValidationEvents,
+    
     UserRepository,
     SettingRepository,
     UserUseCase,

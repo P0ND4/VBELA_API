@@ -26,7 +26,7 @@ export class TableController {
     @Req() req,
     @Body() tableHttpDto: TableHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.tableUseCase.add(req.user.identifier, tableHttpDto);
+    return this.tableUseCase.add(req.user.selected, tableHttpDto);
   }
 
   @Post('multiple')
@@ -34,7 +34,7 @@ export class TableController {
     @Req() req,
     @Body() tablesHttpDto: TableHttpDto[],
   ): Promise<ApiResponse<null>> {
-    return this.tableUseCase.addMultiple(req.user.identifier, tablesHttpDto);
+    return this.tableUseCase.addMultiple(req.user.selected, tablesHttpDto);
   }
 
   @Put(':id')
@@ -43,11 +43,11 @@ export class TableController {
     @Param('id') id: string,
     @Body() tableHttpDto: TableHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.tableUseCase.edit(req.user.identifier, id, tableHttpDto);
+    return this.tableUseCase.edit(req.user.selected, id, tableHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.tableUseCase.remove(req.user.identifier, id);
+    return this.tableUseCase.remove(req.user.selected, id);
   }
 }

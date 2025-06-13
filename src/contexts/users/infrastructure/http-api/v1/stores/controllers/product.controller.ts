@@ -26,7 +26,7 @@ export class ProductController {
     @Req() req,
     @Body() productHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.productUseCase.add(req.user.identifier, productHttpDto);
+    return this.productUseCase.add(req.user.selected, productHttpDto);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class ProductController {
     @Param('id') id: string,
     @Body() productHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.productUseCase.edit(req.user.identifier, id, productHttpDto);
+    return this.productUseCase.edit(req.user.selected, id, productHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.productUseCase.remove(req.user.identifier, id);
+    return this.productUseCase.remove(req.user.selected, id);
   }
 }

@@ -34,7 +34,8 @@ export class CustomStrategy extends PassportStrategy(
     const errors = await validate(loginDto);
     if (!!errors.length) throw new UnauthorizedException('Validation failed');
 
-    const isValid = await this.temporalTokenService.validateAndConsumeToken(token);
+    const isValid =
+      await this.temporalTokenService.validateAndConsumeToken(token);
     if (!isValid) throw new UnauthorizedException('Token expired or invalid');
 
     return await this.authUseCase.login(identifier, selected);

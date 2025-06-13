@@ -26,7 +26,7 @@ export class PortionGroupController {
     @Req() req,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.portionGroupUseCase.add(req.user.identifier, groupHttpDto);
+    return this.portionGroupUseCase.add(req.user.selected, groupHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class PortionGroupController {
     @Param('id') id: string,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.portionGroupUseCase.edit(req.user.identifier, id, groupHttpDto);
+    return this.portionGroupUseCase.edit(req.user.selected, id, groupHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class PortionGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.portionGroupUseCase.remove(req.user.identifier, id);
+    return this.portionGroupUseCase.remove(req.user.selected, id);
   }
 }

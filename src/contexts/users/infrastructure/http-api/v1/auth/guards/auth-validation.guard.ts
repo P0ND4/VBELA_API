@@ -5,16 +5,14 @@ import * as CryptoJS from 'crypto-js';
 
 @Injectable()
 export class AuthValidationGuard implements CanActivate {
-  constructor(
-    private configService: ConfigService,
-  ) {}
+  constructor(private configService: ConfigService) {}
 
   private validateHash(
     identifier: string,
     hash: string,
     timestamp: number,
   ): boolean {
-    const secret = this.configService.get<string>('LOGIN_SECRET');
+    const secret = this.configService.get<string>('AUTH_SECRET');
     const currentTime = Math.floor(Date.now() / 1000);
 
     if (Math.abs(currentTime - timestamp) > 60) return false;
@@ -23,6 +21,7 @@ export class AuthValidationGuard implements CanActivate {
       `${identifier}:${timestamp}`,
       secret,
     ).toString();
+
     return expectedHash === hash;
   }
 

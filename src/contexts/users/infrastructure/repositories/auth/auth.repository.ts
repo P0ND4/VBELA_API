@@ -8,7 +8,6 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { ApiResponse, Status } from 'src/contexts/shared/api.response';
 import { TemporalTokenService } from '../../services/temporal-token.service';
-import { PrimitiveUser, UserEntity } from 'src/contexts/users/domain/user.entity';
 
 @Injectable()
 export class AuthRepository extends AuthRepositoryEntity {

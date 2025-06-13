@@ -26,7 +26,7 @@ export class KitchenController {
     @Req() req,
     @Body() kitchenHttpDto: KitchenHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.kitchenUseCase.add(req.user.identifier, kitchenHttpDto);
+    return this.kitchenUseCase.add(req.user.selected, kitchenHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class KitchenController {
     @Param('id') id: string,
     @Body() kitchenHttpDto: Kitchen,
   ): Promise<ApiResponse<null>> {
-    return this.kitchenUseCase.edit(req.user.identifier, id, kitchenHttpDto);
+    return this.kitchenUseCase.edit(req.user.selected, id, kitchenHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class KitchenController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.kitchenUseCase.remove(req.user.identifier, id);
+    return this.kitchenUseCase.remove(req.user.selected, id);
   }
 }

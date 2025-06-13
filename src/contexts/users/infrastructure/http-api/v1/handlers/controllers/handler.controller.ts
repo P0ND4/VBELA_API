@@ -26,7 +26,7 @@ export class HandlerController {
     @Req() req,
     @Body() handlerHttpDto: HandlerHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.handlerUseCase.add(req.user.identifier, handlerHttpDto);
+    return this.handlerUseCase.add(req.user.selected, handlerHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class HandlerController {
     @Param('id') id: string,
     @Body() handlerHttpDto: HandlerHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.handlerUseCase.edit(req.user.identifier, id, handlerHttpDto);
+    return this.handlerUseCase.edit(req.user.selected, id, handlerHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class HandlerController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.handlerUseCase.remove(req.user.identifier, id);
+    return this.handlerUseCase.remove(req.user.selected, id);
   }
 }

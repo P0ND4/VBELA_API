@@ -27,7 +27,7 @@ export class CollaboratorController {
     @Req() req,
     @Body() collaboratorHttpDto: CollaboratorHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.collaboratorUseCase.add(req.user.identifier, collaboratorHttpDto);
+    return this.collaboratorUseCase.add(req.user.selected, collaboratorHttpDto);
   }
 
   @Put(':id')
@@ -36,7 +36,7 @@ export class CollaboratorController {
     @Param('id') id: string,
     @Body() collaboratorHttpDto: CollaboratorHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.collaboratorUseCase.edit(req.user.identifier, id, collaboratorHttpDto);
+    return this.collaboratorUseCase.edit(req.user.selected, id, collaboratorHttpDto);
   }
 
   @Delete(':id')
@@ -44,6 +44,6 @@ export class CollaboratorController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.collaboratorUseCase.remove(req.user.identifier, id);
+    return this.collaboratorUseCase.remove(req.user.selected, id);
   }
 }

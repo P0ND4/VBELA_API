@@ -54,7 +54,7 @@ export class SettingController {
     @Request() req,
     @Body() tipHttpDto: TipHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.tip(req.user.identifier, tipHttpDto.tip);
+    return this.settingUseCase.tip(req.user.selected, tipHttpDto.tip);
   }
 
   @RequiredPermissions(["admin"])
@@ -63,7 +63,7 @@ export class SettingController {
     @Request() req,
     @Body() taxHttpDto: TaxHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.tax(req.user.identifier, taxHttpDto.tax);
+    return this.settingUseCase.tax(req.user.selected, taxHttpDto.tax);
   }
 
   @RequiredPermissions(["admin"])
@@ -73,7 +73,7 @@ export class SettingController {
     @Body() initialBasisHttpDto: InitialBasisHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.initialBasis(
-      req.user.identifier,
+      req.user.selected,
       initialBasisHttpDto.initialBasis,
     );
   }
@@ -85,7 +85,7 @@ export class SettingController {
     @Body() invoiceInformationHttpDto: InvoiceInformationHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.invoiceInformation(
-      req.user.identifier,
+      req.user.selected,
       invoiceInformationHttpDto,
     );
   }
@@ -97,7 +97,7 @@ export class SettingController {
     @Body() paymentMethodsHttpDto: PaymentMethodsHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.addPaymentMethods(
-      req.user.identifier,
+      req.user.selected,
       paymentMethodsHttpDto,
     );
   }
@@ -110,7 +110,7 @@ export class SettingController {
     @Body() paymentMethodsHttpDto: PaymentMethodsHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.settingUseCase.editPaymentMethods(
-      req.user.identifier,
+      req.user.selected,
       id,
       paymentMethodsHttpDto,
     );
@@ -122,6 +122,6 @@ export class SettingController {
     @Param('id') id: string,
     @Request() req,
   ): Promise<ApiResponse<null>> {
-    return this.settingUseCase.removePaymentMethods(req.user.identifier, id);
+    return this.settingUseCase.removePaymentMethods(req.user.selected, id);
   }
 }

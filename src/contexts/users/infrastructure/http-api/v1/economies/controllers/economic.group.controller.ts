@@ -26,7 +26,7 @@ export class EconomicGroupController {
     @Req() req,
     @Body() economicGroup: EconomicGroupHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.economicGroupUseCase.add(req.user.identifier, economicGroup);
+    return this.economicGroupUseCase.add(req.user.selected, economicGroup);
   }
 
   @Put(':id')
@@ -36,7 +36,7 @@ export class EconomicGroupController {
     @Body() economicGroup: EconomicGroupHttpDto,
   ): Promise<ApiResponse<null>> {
     return this.economicGroupUseCase.edit(
-      req.user.identifier,
+      req.user.selected,
       id,
       economicGroup,
     );
@@ -47,6 +47,6 @@ export class EconomicGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.economicGroupUseCase.remove(req.user.identifier, id);
+    return this.economicGroupUseCase.remove(req.user.selected, id);
   }
 }

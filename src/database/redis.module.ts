@@ -43,12 +43,23 @@ import { Redis } from 'ioredis';
         });
       },
     },
+    {
+      provide: 'REDIS_PENDING_NOTIFICATION',
+      useFactory: () => {
+        return new Redis({
+          host: 'localhost',
+          port: 6379,
+          db: 4,
+        });
+      },
+    },
   ],
   exports: [
     'REDIS_THROTTLER',
     'REDIS_VERIFICATION',
     'REDIS_BLACKLIST_TOKEN',
     'REDIS_TEMPORAL_TOKEN',
+    'REDIS_PENDING_NOTIFICATION',
   ],
 })
 export class RedisModule {}

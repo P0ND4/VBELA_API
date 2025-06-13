@@ -24,6 +24,7 @@ import {
 export interface PrimitiveUser {
   id: string;
   identifier: string;
+  name: string;
   type: string | null;
   expoID: string | null;
   darkMode: boolean;
@@ -64,7 +65,8 @@ export class UserEntity {
   static transform(createUser: Partial<PrimitiveUser>): UserEntity {
     return new UserEntity({
       id: createUser.id || uuidv4(),
-      identifier: createUser.identifier || '',
+      identifier: createUser.identifier,
+      name: createUser.name || '',
       expoID: createUser.expoID || null,
       type: createUser.type || null,
       darkMode: createUser.darkMode ?? false,

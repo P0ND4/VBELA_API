@@ -1,4 +1,10 @@
-import { HttpStatus, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import {
+  HttpStatus,
+  Injectable,
+  InternalServerErrorException,
+  Logger,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   AuthRepositoryEntity,
   Session,
@@ -11,16 +17,18 @@ import { InjectModel } from '@nestjs/mongoose';
 import { User } from '../../infrastructure/schema/user/user.schema';
 import { Model } from 'mongoose';
 import { Token } from '../../domain/token.entity';
+import { ValidationEvents } from '../../infrastructure/repositories/common/validation.events';
 
 @Injectable()
 export class AuthUseCase {
   private readonly logger = new Logger(AuthUseCase.name);
-  
+
   constructor(
     private configService: ConfigService,
     private jwtService: JwtService,
     private readonly authRepository: AuthRepositoryEntity,
     private tokenBlacklistService: TokenBlacklistService,
+    private validationEvents: ValidationEvents,
     @InjectModel(User.name) public userModel: Model<User>,
   ) {}
 
@@ -54,9 +62,7 @@ export class AuthUseCase {
     identifier,
     selected,
   ): Promise<ApiResponse<{ access_token: string; refresh_token: string }>> {
-    const user = await this.userModel.findOne({ identifier: selected }).exec();
-
-    if (!user) throw new NotFoundException('El usuario no existe.');
+    const user = await this.validationEvents.validate(identifier, selected);
 
     const payload: Omit<Token, 'tokenType'> = {
       id: user.id,

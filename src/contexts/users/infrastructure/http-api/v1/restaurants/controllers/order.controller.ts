@@ -26,7 +26,7 @@ export class OrderController {
     @Req() req,
     @Body() orderHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.orderUseCase.add(req.user.identifier, orderHttpDto);
+    return this.orderUseCase.add(req.user.selected, orderHttpDto);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class OrderController {
     @Param('id') id: string,
     @Body() orderHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.orderUseCase.edit(req.user.identifier, id, orderHttpDto);
+    return this.orderUseCase.edit(req.user.selected, id, orderHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.orderUseCase.remove(req.user.identifier, id);
+    return this.orderUseCase.remove(req.user.selected, id);
   }
 }

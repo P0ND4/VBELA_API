@@ -27,7 +27,7 @@ export class InventoryController {
     @Req() req,
     @Body() inventoryHttpDto: InventoryHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.inventoryUseCase.add(req.user.identifier, inventoryHttpDto);
+    return this.inventoryUseCase.add(req.user.selected, inventoryHttpDto);
   }
 
   @Put(':id')
@@ -36,11 +36,11 @@ export class InventoryController {
     @Param('id') id: string,
     @Body() inventoryHttpDto: InventoryHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.inventoryUseCase.edit(req.user.identifier, id, inventoryHttpDto);
+    return this.inventoryUseCase.edit(req.user.selected, id, inventoryHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.inventoryUseCase.remove(req.user.identifier, id);
+    return this.inventoryUseCase.remove(req.user.selected, id);
   }
 }

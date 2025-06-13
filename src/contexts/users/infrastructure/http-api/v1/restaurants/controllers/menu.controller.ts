@@ -27,7 +27,7 @@ export class MenuController {
     @Req() req,
     @Body() menuHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.menuUseCase.add(req.user.identifier, menuHttpDto);
+    return this.menuUseCase.add(req.user.selected, menuHttpDto);
   }
 
   @Put(':id')
@@ -36,11 +36,11 @@ export class MenuController {
     @Param('id') id: string,
     @Body() menuHttpDto: ElementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.menuUseCase.edit(req.user.identifier, id, menuHttpDto);
+    return this.menuUseCase.edit(req.user.selected, id, menuHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.menuUseCase.remove(req.user.identifier, id);
+    return this.menuUseCase.remove(req.user.selected, id);
   }
 }

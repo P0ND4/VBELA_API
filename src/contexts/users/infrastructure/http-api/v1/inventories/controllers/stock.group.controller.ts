@@ -26,7 +26,7 @@ export class StockGroupController {
     @Req() req,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.stockGroupUseCase.add(req.user.identifier, groupHttpDto);
+    return this.stockGroupUseCase.add(req.user.selected, groupHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class StockGroupController {
     @Param('id') id: string,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.stockGroupUseCase.edit(req.user.identifier, id, groupHttpDto);
+    return this.stockGroupUseCase.edit(req.user.selected, id, groupHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class StockGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.stockGroupUseCase.remove(req.user.identifier, id);
+    return this.stockGroupUseCase.remove(req.user.selected, id);
   }
 }

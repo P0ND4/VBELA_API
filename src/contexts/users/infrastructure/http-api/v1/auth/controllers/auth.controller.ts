@@ -16,7 +16,7 @@ import { RefreshTokenGuard } from '../guards/refresh-token.guard';
 import { AccessTokenGuard } from '../guards/access-token.guard';
 
 @Controller(`${V1_USER}/auth`)
-@Throttle({ default: { ttl: minutes(1), limit: 3 } })
+@Throttle({ default: { ttl: minutes(1), limit: 5 } })
 export class AuthController {
   constructor(private readonly authUseCase: AuthUseCase) {}
 

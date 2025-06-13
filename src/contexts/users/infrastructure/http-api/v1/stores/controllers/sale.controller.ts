@@ -26,7 +26,7 @@ export class SaleController {
     @Req() req,
     @Body() saleHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.saleUseCase.add(req.user.identifier, saleHttpDto);
+    return this.saleUseCase.add(req.user.selected, saleHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class SaleController {
     @Param('id') id: string,
     @Body() saleHttpDto: OrderHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.saleUseCase.edit(req.user.identifier, id, saleHttpDto);
+    return this.saleUseCase.edit(req.user.selected, id, saleHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class SaleController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.saleUseCase.remove(req.user.identifier, id);
+    return this.saleUseCase.remove(req.user.selected, id);
   }
 }

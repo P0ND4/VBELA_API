@@ -26,7 +26,7 @@ export class ProductGroupController {
     @Req() req,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.productGroupUseCase.add(req.user.identifier, groupHttpDto);
+    return this.productGroupUseCase.add(req.user.selected, groupHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class ProductGroupController {
     @Param('id') id: string,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.productGroupUseCase.edit(req.user.identifier, id, groupHttpDto);
+    return this.productGroupUseCase.edit(req.user.selected, id, groupHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class ProductGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.productGroupUseCase.remove(req.user.identifier, id);
+    return this.productGroupUseCase.remove(req.user.selected, id);
   }
 }

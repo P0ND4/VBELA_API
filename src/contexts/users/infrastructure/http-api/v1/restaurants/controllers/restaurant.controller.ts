@@ -26,7 +26,7 @@ export class RestaurantController {
     @Req() req,
     @Body() restaurantHttpDto: LocationHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.restaurantUseCase.add(req.user.identifier, restaurantHttpDto);
+    return this.restaurantUseCase.add(req.user.selected, restaurantHttpDto);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class RestaurantController {
     @Param('id') id: string,
     @Body() restaurantHttpDto: LocationHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.restaurantUseCase.edit(req.user.identifier, id, restaurantHttpDto);
+    return this.restaurantUseCase.edit(req.user.selected, id, restaurantHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.restaurantUseCase.remove(req.user.identifier, id);
+    return this.restaurantUseCase.remove(req.user.selected, id);
   }
 }

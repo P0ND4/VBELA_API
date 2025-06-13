@@ -26,7 +26,7 @@ export class StockController {
     @Req() req,
     @Body() stockHttpDto: StockHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.add(req.user.identifier, stockHttpDto);
+    return this.stockUseCase.add(req.user.selected, stockHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class StockController {
     @Param('id') id: string,
     @Body() stockHttpDto: StockHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.edit(req.user.identifier, id, stockHttpDto);
+    return this.stockUseCase.edit(req.user.selected, id, stockHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class StockController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.stockUseCase.remove(req.user.identifier, id);
+    return this.stockUseCase.remove(req.user.selected, id);
   }
 }

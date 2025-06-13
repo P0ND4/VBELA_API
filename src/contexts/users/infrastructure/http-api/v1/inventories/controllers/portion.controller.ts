@@ -30,7 +30,7 @@ export class PortionController {
     @Req() req,
     @Body() portionHttpDto: PortionHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.portionUseCase.add(req.user.identifier, portionHttpDto);
+    return this.portionUseCase.add(req.user.selected, portionHttpDto);
   }
   @Post('activity')
   async addActivity(
@@ -46,7 +46,7 @@ export class PortionController {
     @Param('id') id: string,
     @Body() portionHttpDto: PortionHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.portionUseCase.edit(req.user.identifier, id, portionHttpDto);
+    return this.portionUseCase.edit(req.user.selected, id, portionHttpDto);
   }
 
   @Delete(':id')
@@ -54,6 +54,6 @@ export class PortionController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.portionUseCase.remove(req.user.identifier, id);
+    return this.portionUseCase.remove(req.user.selected, id);
   }
 }

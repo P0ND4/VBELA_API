@@ -26,7 +26,7 @@ export class SupplierController {
     @Req() req,
     @Body() supplierHttpDto: SupplierHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.supplierUseCase.add(req.user.identifier, supplierHttpDto);
+    return this.supplierUseCase.add(req.user.selected, supplierHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class SupplierController {
     @Param('id') id: string,
     @Body() supplierHttpDto: SupplierHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.supplierUseCase.edit(req.user.identifier, id, supplierHttpDto);
+    return this.supplierUseCase.edit(req.user.selected, id, supplierHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class SupplierController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.supplierUseCase.remove(req.user.identifier, id);
+    return this.supplierUseCase.remove(req.user.selected, id);
   }
 }

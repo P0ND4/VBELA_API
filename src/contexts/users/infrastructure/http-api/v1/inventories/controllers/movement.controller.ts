@@ -26,7 +26,7 @@ export class MovementController {
     @Req() req,
     @Body() movementHttpDto: MovementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.movementUseCase.add(req.user.identifier, movementHttpDto);
+    return this.movementUseCase.add(req.user.selected, movementHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class MovementController {
     @Param('id') id: string,
     @Body() movementHttpDto: MovementHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.movementUseCase.edit(req.user.identifier, id, movementHttpDto);
+    return this.movementUseCase.edit(req.user.selected, id, movementHttpDto);
   }
 
   @Delete('multiple/:id')
@@ -43,7 +43,7 @@ export class MovementController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.movementUseCase.removeMultiple(req.user.identifier, id);
+    return this.movementUseCase.removeMultiple(req.user.selected, id);
   }
 
   @Delete(':id')
@@ -51,6 +51,6 @@ export class MovementController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.movementUseCase.remove(req.user.identifier, id);
+    return this.movementUseCase.remove(req.user.selected, id);
   }
 }

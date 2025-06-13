@@ -26,7 +26,7 @@ export class RecipeGroupController {
     @Req() req,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.recipeGroupUseCase.add(req.user.identifier, groupHttpDto);
+    return this.recipeGroupUseCase.add(req.user.selected, groupHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class RecipeGroupController {
     @Param('id') id: string,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.recipeGroupUseCase.edit(req.user.identifier, id, groupHttpDto);
+    return this.recipeGroupUseCase.edit(req.user.selected, id, groupHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class RecipeGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.recipeGroupUseCase.remove(req.user.identifier, id);
+    return this.recipeGroupUseCase.remove(req.user.selected, id);
   }
 }

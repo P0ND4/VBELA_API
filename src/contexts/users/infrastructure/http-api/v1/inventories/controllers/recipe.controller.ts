@@ -26,7 +26,7 @@ export class RecipeController {
     @Req() req,
     @Body() recipeHttpDto: RecipeHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.recipeUseCase.add(req.user.identifier, recipeHttpDto);
+    return this.recipeUseCase.add(req.user.selected, recipeHttpDto);
   }
 
   @Put(':id')
@@ -35,11 +35,11 @@ export class RecipeController {
     @Param('id') id: string,
     @Body() recipeHttpDto: RecipeHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.recipeUseCase.edit(req.user.identifier, id, recipeHttpDto);
+    return this.recipeUseCase.edit(req.user.selected, id, recipeHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.recipeUseCase.remove(req.user.identifier, id);
+    return this.recipeUseCase.remove(req.user.selected, id);
   }
 }

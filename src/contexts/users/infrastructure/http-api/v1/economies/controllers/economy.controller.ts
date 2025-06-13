@@ -26,7 +26,7 @@ export class EconomyController {
     @Req() req,
     @Body() economyHttpDto: EconomyHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.economyUseCase.add(req.user.identifier, economyHttpDto);
+    return this.economyUseCase.add(req.user.selected, economyHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class EconomyController {
     @Param('id') id: string,
     @Body() economyHttpDto: EconomyHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.economyUseCase.edit(req.user.identifier, id, economyHttpDto);
+    return this.economyUseCase.edit(req.user.selected, id, economyHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class EconomyController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.economyUseCase.remove(req.user.identifier, id);
+    return this.economyUseCase.remove(req.user.selected, id);
   }
 }

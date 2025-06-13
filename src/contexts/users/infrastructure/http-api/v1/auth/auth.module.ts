@@ -24,6 +24,7 @@ import { CheckController } from './controllers/check.controller';
 import { TwilioService } from 'src/contexts/shared/twilio/twilio.service';
 import { TokenBlacklistService } from '../../../services/token-blacklist.service';
 import { TemporalTokenService } from '../../../services/temporal-token.service';
+import { ValidationEvents } from '../../../repositories/common/validation.events';
 
 @Module({
   imports: [
@@ -39,6 +40,7 @@ import { TemporalTokenService } from '../../../services/temporal-token.service';
   ],
   controllers: [AuthController, VerifyController, CheckController],
   providers: [
+    ValidationEvents,
     TokenBlacklistService,
     TemporalTokenService,
 

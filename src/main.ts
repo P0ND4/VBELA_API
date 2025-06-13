@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
-import { API } from './app/routes/route.contants';
+import { API } from './app/routes/route.constants';
 import { ValidationPipe } from '@nestjs/common';
 import { ApiResponseInterceptor } from './contexts/shared/interceptor/api.response.interceptor';
 

@@ -6,22 +6,16 @@ import { Model } from 'mongoose';
 import { UserRepositoryEntity } from 'src/contexts/users/domain/repositories/user/user.repository.entity';
 import { ApiResponse, Status } from 'src/contexts/shared/api.response';
 import { Permissions } from 'src/contexts/users/domain/types';
+import { ValidationEvents } from 'src/contexts/users/infrastructure/repositories/common/validation.events';
+import { permissionMap } from '../../constants/permission.constants';
 
 @Injectable()
 export class UserRepository extends UserRepositoryEntity {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private validationEvents: ValidationEvents,
+  ) {
     super();
-  }
-
-  private async validate(identifier: string): Promise<PrimitiveUser> {
-    const existingUser = await this.userModel.findOne({ identifier }).exec();
-
-    if (existingUser) return UserEntity.transform(existingUser).toPrimitives();
-
-    const newUser = new this.userModel({ identifier });
-    const savedUser = await newUser.save();
-
-    return UserEntity.transform(savedUser).toPrimitives();
   }
 
   async getUserInformation(
@@ -35,50 +29,22 @@ export class UserRepository extends UserRepositoryEntity {
       );
     }
 
-    const user = await this.validate(selected);
-    const userPrimitives = UserEntity.transform(user).toPrimitives();
+    const user = await this.validationEvents.validate(identifier, selected);
 
     if (identifier === selected)
       return new ApiResponse(
         Status.Success,
         HttpStatus.OK,
         'Usuario obtenido.',
-        userPrimitives,
+        { ...user, selected, permissions },
       );
-
-    // Mapeo completo de permisos a campos
-    const permissionMap = {
-      accessToInventory: [
-        'stocks',
-        'stockGroup',
-        'inventories',
-        'recipes',
-        'recipeGroup',
-        'movements',
-        'portions',
-        'portionGroup',
-      ],
-      accessToStore: ['stores', 'productGroup', 'products', 'sales'],
-      accessToKitchen: ['kitchens'],
-      accessToRestaurant: [
-        'restaurants',
-        'menuGroup',
-        'menu',
-        'orders',
-        'tables',
-      ],
-      accessToEconomy: ['economies', 'economicGroup'],
-      accessToSupplier: ['suppliers'],
-      accessToCollaborator: ['collaborators'],
-      accessToStatistics: ['initialBasis', 'handlers'],
-    };
 
     // Construcción del objeto colaborator basado en permisos
     const collaborator = Object.entries(permissionMap).reduce(
       (acc, [permission, fields]) => {
         if (permissions[permission]) {
           fields.forEach((field) => {
-            acc[field] = userPrimitives[field];
+            acc[field] = user[field];
           });
         }
         return acc;
@@ -86,13 +52,22 @@ export class UserRepository extends UserRepositoryEntity {
       {},
     );
 
+    // Agrega como identificador el colaborador y no la cuenta principal
+    collaborator['identifier'] = identifier;
+
+    // Enviamos los permisos para limitar al colaborador
+    collaborator['permissions'] = permissions;
+
+    // Enviamos la cuenta que ha seleccionado el usuario
+    collaborator['selected'] = selected;
+
     // Campos compartidos que requieren múltiples condiciones
     const sharedFields = ['invoiceInformation', 'paymentMethods', 'tip', 'tax'];
 
     // Añadir campos compartidos si cumple alguna condición
     if (permissions.accessToRestaurant || permissions.accessToStore) {
       sharedFields.forEach((field) => {
-        if (!collaborator[field]) collaborator[field] = userPrimitives[field];
+        if (!collaborator[field]) collaborator[field] = user[field];
       });
     }
 

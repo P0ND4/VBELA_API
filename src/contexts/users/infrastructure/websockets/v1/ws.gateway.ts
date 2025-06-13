@@ -11,33 +11,8 @@ import { Server, Socket } from 'socket.io';
 import { V1_WS } from '../route.constants';
 import { WsJwtGuard } from './ws-jwt.guard';
 import { Logger } from '@nestjs/common';
-
-// Mapeo completo de permisos a campos
-const permissionMap = {
-  accessToInventory: [
-    'stocks',
-    'stockGroup',
-    'inventories',
-    'recipes',
-    'recipeGroup',
-    'movements',
-    'portions',
-    'portionGroup',
-  ],
-  accessToStore: ['stores', 'productGroup', 'products', 'sales'],
-  accessToKitchen: ['kitchens'],
-  accessToRestaurant: [
-    'restaurants',
-    'menuGroup',
-    'menu',
-    'orders',
-    'tables',
-  ],
-  accessToEconomy: ['economies', 'economicGroup'],
-  accessToSupplier: ['suppliers'],
-  accessToCollaborator: ['collaborators'],
-  accessToStatistics: ['initialBasis', 'handlers'],
-};
+import { permissionMap } from '../../constants/permission.constants';
+import { PendingNotificationService } from '../../services/pending-notification.service';
 
 @WebSocketGateway({ namespace: V1_WS })
 export class WebsocketGateway
@@ -48,32 +23,34 @@ export class WebsocketGateway
   @WebSocketServer()
   server: Server;
 
-  constructor(private wsGuard: WsJwtGuard) {}
+  constructor(
+    private wsGuard: WsJwtGuard,
+    private pendingNotificationService: PendingNotificationService,
+  ) {}
 
   private joinPermissionRooms(client: Socket, permissions: string[]) {
     // Sala principal por usuario
     const { id: userId } = client.data.user;
-    client.join(`user_${userId}`);
-    
+
+    const permissionsToProcess =
+      permissions === null ? permissionMap : permissions;
+
     // Salas por permisos
-    permissions.forEach(permission => {
-      if (permissionMap[permission]) {
-        permissionMap[permission].forEach(room => {
-          client.join(`perm_${room}`);
-          this.logger.log(`Usuario ${userId} unido a sala perm_${room}`);
-        });
-      }
-    });
+    Object.keys(permissionsToProcess).forEach((entity) =>
+      client.join(`perm_${entity}_${userId}`),
+    );
   }
 
   async handleConnection(client: Socket) {
     try {
       await this.wsGuard.validateClient(client);
-      const { id: userId, permissions } = client.data.user;
+      const { id: userId, permissions, identifier } = client.data.user;
 
+      const room = `${identifier}_${userId}`;
+      client.join(room);
       // Unirse a salas según permisos
       this.joinPermissionRooms(client, permissions);
-      
+
       this.logger.log(`Cliente autenticado: ${client.id} (Usuario: ${userId})`);
     } catch (error) {
       this.logger.warn(`Conexión rechazada: ${client.id}`, error.message);
@@ -86,25 +63,63 @@ export class WebsocketGateway
     this.logger.log(`Cliente desconectado: ${client.id} (Usuario: ${userId})`);
   }
 
-  @SubscribeMessage('leave-room')
-  handleLeaveRoom(client: Socket, @MessageBody() room: string) {
-    client.leave(room);
-    this.logger.log(`Usuario ${client.data.user.id} salió de la sala ${room}`);
+  @SubscribeMessage('validate')
+  async validate(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { logout: boolean },
+  ) {
+    const { id: userId, identifier } = client.data.user;
+
+    const validation =
+      await this.pendingNotificationService.validatePendingNotification(
+        identifier,
+      );
+
+    const room = `${identifier}_${userId}`;
+    if (validation && data.logout) this.server.to(room).emit('logout');
+  }
+
+  @SubscribeMessage('PING')
+  handlePing(@ConnectedSocket() client: Socket) {
+    client.emit('PONG', { timestamp: Date.now() });
+  }
+
+  @SubscribeMessage('account-updated')
+  async accountUpdated(
+    @ConnectedSocket() client: Socket,
+    @MessageBody() data: { identifier: string },
+  ) {
+    const { id: userId } = client.data.user;
+    const room = `${data.identifier}_${userId}`;
+
+    // Emitir a todos en la sala
+    this.server.to(room).emit('logout');
+
+    // Si no hay nadie en la sala, crear notificación pendiente
+    const sockets = await this.server.in(room).fetchSockets();
+    if (sockets.length === 0) {
+      await this.pendingNotificationService.createPendingNotification(
+        data.identifier,
+      );
+    }
   }
 
   @SubscribeMessage('update-change')
   updateChange(
     @ConnectedSocket() client: Socket,
-    @MessageBody() data: { entity: string; }
+    @MessageBody() data: { entity: string },
   ) {
+    const { id: userId } = client.data.user;
     const { entity } = data;
-    
+
     // Enviar solo a la sala correspondiente a la entidad modificada
-    this.server.to(`perm_${entity}`).emit('update-change', "refresh-data");
-    
+    client.broadcast
+      .to(`perm_${entity}_${userId}`)
+      .emit('update-change', 'refresh-data');
+
     // Loggear la acción
     this.logger.log(
-      `Actualización de ${entity} por usuario ${client.data.user.id}`
+      `Actualización de ${entity} por usuario ${client.data.user.identifier}`,
     );
   }
 }

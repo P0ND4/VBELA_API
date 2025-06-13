@@ -26,7 +26,7 @@ export class MenuGroupController {
     @Req() req,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.menuGroupUseCase.add(req.user.identifier, groupHttpDto);
+    return this.menuGroupUseCase.add(req.user.selected, groupHttpDto);
   }
 
   @Put(':id')
@@ -35,7 +35,7 @@ export class MenuGroupController {
     @Param('id') id: string,
     @Body() groupHttpDto: GroupHttpDTO,
   ): Promise<ApiResponse<null>> {
-    return this.menuGroupUseCase.edit(req.user.identifier, id, groupHttpDto);
+    return this.menuGroupUseCase.edit(req.user.selected, id, groupHttpDto);
   }
 
   @Delete(':id')
@@ -43,6 +43,6 @@ export class MenuGroupController {
     @Param('id') id: string,
     @Req() req,
   ): Promise<ApiResponse<null>> {
-    return this.menuGroupUseCase.remove(req.user.identifier, id);
+    return this.menuGroupUseCase.remove(req.user.selected, id);
   }
 }

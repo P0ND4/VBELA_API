@@ -27,7 +27,7 @@ export class StoreController {
     @Req() req,
     @Body() storeHttpDto: LocationHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.storeUseCase.add(req.user.identifier, storeHttpDto);
+    return this.storeUseCase.add(req.user.selected, storeHttpDto);
   }
 
   @Put(':id')
@@ -36,11 +36,11 @@ export class StoreController {
     @Param('id') id: string,
     @Body() storeHttpDto: LocationHttpDto,
   ): Promise<ApiResponse<null>> {
-    return this.storeUseCase.edit(req.user.identifier, id, storeHttpDto);
+    return this.storeUseCase.edit(req.user.selected, id, storeHttpDto);
   }
 
   @Delete(':id')
   async remove(@Param('id') id: string, @Req() req): Promise<ApiResponse<null>> {
-    return this.storeUseCase.remove(req.user.identifier, id);
+    return this.storeUseCase.remove(req.user.selected, id);
   }
 }

@@ -1,10 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsBoolean,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class PermissionsDto {
   @IsBoolean()
@@ -52,4 +47,10 @@ export class CollaboratorHttpDto {
 
   @IsOptional()
   permissions: PermissionsDto | null;
+
+  @IsNumber()
+  creationDate: number;
+
+  @IsNumber()
+  modificationDate: number;
 }

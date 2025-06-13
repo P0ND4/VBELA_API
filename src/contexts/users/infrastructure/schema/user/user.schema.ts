@@ -30,6 +30,9 @@ export class User extends Document {
   @Prop({ required: true, unique: true })
   identifier: string;
 
+  @Prop({ default: '' })
+  name: string;
+
   @Prop({ default: null })
   type: string | null;
 

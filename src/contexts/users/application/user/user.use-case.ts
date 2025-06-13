@@ -7,7 +7,7 @@ import { Permissions } from '../../domain/types';
 @Injectable()
 export class UserUseCase {
   constructor(private readonly userRepository: UserRepositoryEntity) {}
-
+  
   async getUserInformation(
     identifier: string,
     selected: string,
