@@ -33,6 +33,10 @@ export class MovementHttpDto {
   @IsNotEmpty()
   id: string;
 
+  @IsString()
+  @IsNotEmpty()
+  reason: string;
+
   @IsObject()
   @ValidateNested()
   @Type(() => DetailsDto)

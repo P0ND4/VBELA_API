@@ -3,7 +3,6 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { TokenBlacklistService } from 'src/contexts/users/infrastructure/services/token-blacklist.service';
-import { Permissions } from 'src/contexts/users/domain/types';
 import { Token } from 'src/contexts/users/domain/token.entity';
 
 @Injectable()

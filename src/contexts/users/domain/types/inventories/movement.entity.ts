@@ -5,6 +5,7 @@ type DetailsType = {
 
 export type Movement = {
   id: string;
+  reason: string;
   inventory: DetailsType;
   stock: DetailsType & { unit?: string; currentValue: number };
   supplier: DetailsType | null;
