@@ -68,7 +68,18 @@ export class User extends Document {
   @Prop({ default: 0 })
   initialBasis: number;
 
-  @Prop({ type: [Object], default: [] })
+  @Prop({
+    type: [Object],
+    default: [
+      {
+        id: 'default',
+        name: 'Efectivo',
+        icon: 'cash-outline',
+        creationDate: Date.now(),
+        modificationDate: Date.now(),
+      },
+    ],
+  })
   paymentMethods: PaymentMethods[];
 
   @Prop({ type: [Object], default: [] })

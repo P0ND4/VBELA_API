@@ -11,10 +11,9 @@ async function bootstrap() {
   app.use((req: any, res: any, next: any) => {
     const logger = new Logger('HTTP');
     const { method, originalUrl } = req;
-    const timestamp = new Date().toISOString();
-    
+
     res.on('finish', () => {
-      logger.verbose(`[${timestamp}] ${method} ${originalUrl} - ${res.statusCode}`);
+      logger.verbose(`${method} ${originalUrl} - ${res.statusCode}`);
     });
 
     next();
