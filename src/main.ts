@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app/app.module';
 import { API } from './app/routes/route.constants';
 import { Logger, ValidationPipe } from '@nestjs/common';
-import { ApiResponseInterceptor } from './contexts/shared/interceptor/api.response.interceptor';
+import { ApiResponseInterceptor } from './contexts/shared/interceptors/api.response.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
