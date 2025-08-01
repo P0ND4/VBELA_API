@@ -8,7 +8,7 @@ import {
   Param,
   Req,
 } from '@nestjs/common';
-import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
+import { AccessTokenGuard } from '../../../../../../shared/guards/access-token.guard';
 import { V1_USER } from '../../../route.constants';
 import { ApiResponse } from 'src/contexts/shared/api.response';
 import { ElementHttpDto } from '../../common-dto/element.http-dto';

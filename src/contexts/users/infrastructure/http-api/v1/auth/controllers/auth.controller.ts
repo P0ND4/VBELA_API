@@ -13,7 +13,7 @@ import { AuthUseCase } from 'src/contexts/users/application/auth/auth.use-case';
 import { GetSessionsHttpDto, LogoutHttpDto } from '../dto/auth.http-dto';
 import { AuthValidationGuard } from '../guards/auth-validation.guard';
 import { RefreshTokenGuard } from '../guards/refresh-token.guard';
-import { AccessTokenGuard } from '../guards/access-token.guard';
+import { AccessTokenGuard } from '../../../../../../shared/guards/access-token.guard';
 
 @Controller(`${V1_USER}/auth`)
 @Throttle({ default: { ttl: minutes(1), limit: 5 } })

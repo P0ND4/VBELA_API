@@ -1,0 +1,1 @@
+export const V1_HEALTH = "v1/health"

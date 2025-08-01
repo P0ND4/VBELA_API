@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AccessTokenGuard } from './access-token.guard';
+import { AccessTokenGuard } from '../../../../../../shared/guards/access-token.guard';
 import { Permissions } from 'src/contexts/users/domain/types';
 import { REQUIRED_PERMISSIONS_KEY } from '../decorators/required-permissions.decorator';
 import { Token } from 'src/contexts/users/domain/token.entity';

@@ -1,5 +1,5 @@
 import { ExecutionContext, Injectable, UnauthorizedException } from '@nestjs/common';
-import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
+import { AccessTokenGuard } from '../../../../../../shared/guards/access-token.guard';
 import { Token } from 'src/contexts/users/domain/token.entity';
 
 @Injectable()

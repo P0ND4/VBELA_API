@@ -1,1 +1,1 @@
-export const V1_USER = "v1/config"
+export const V1_CONFIG = "v1/config"

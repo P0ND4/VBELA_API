@@ -11,7 +11,7 @@ import { V1_USER } from '../../../route.constants';
 import { UserUseCase } from 'src/contexts/users/application/user/user.use-case';
 import { PrimitiveUser } from 'src/contexts/users/domain/user.entity';
 import { ApiResponse } from 'src/contexts/shared/api.response';
-import { AccessTokenGuard } from '../../auth/guards/access-token.guard';
+import { AccessTokenGuard } from '../../../../../../shared/guards/access-token.guard';
 import { OwnerGuard } from '../guard/owner.guard';
 
 @Controller(V1_USER)

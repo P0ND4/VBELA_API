@@ -44,9 +44,9 @@ export class WebsocketGateway
   async handleConnection(client: Socket) {
     try {
       await this.wsGuard.validateClient(client);
-      const { id: userId, permissions, identifier } = client.data.user;
+      const { id: userId, permissions, selected } = client.data.user;
 
-      const room = `${identifier}_${userId}`;
+      const room = `${selected}_${userId}`;
       client.join(room);
       // Unirse a salas según permisos
       this.joinPermissionRooms(client, permissions);
@@ -120,6 +120,19 @@ export class WebsocketGateway
     // Loggear la acción
     this.logger.log(
       `Actualización de ${entity} por usuario ${client.data.user.identifier}`,
+    );
+  }
+
+  @SubscribeMessage('change-all')
+  changeAll(@ConnectedSocket() client: Socket) {
+    const { id: userId, selected } = client.data.user;
+    
+    // Enviar a la sala
+    this.server.to(`${selected}_${userId}`).emit('change-all');
+
+    // Loggear la acción
+    this.logger.log(
+      `Actualización general por usuario ${client.data.user.identifier}`,
     );
   }
 }
